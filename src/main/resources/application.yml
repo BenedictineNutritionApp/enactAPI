@@ -1,0 +1,10 @@
+# Default configuration
+spring:
+  application:
+    name: BenedictineHealthApp
+  datasource:
+    initialization-mode: NEVER
+    url: jdbc:mysql://localhost:3306/health_app
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
