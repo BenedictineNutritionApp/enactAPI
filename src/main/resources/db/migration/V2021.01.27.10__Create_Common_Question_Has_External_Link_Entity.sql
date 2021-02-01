@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS `common_question_has_external_link`
     INDEX `fk_common_question_has_external_link_common_question1_idx` (`common_question_id` ASC) VISIBLE,
     CONSTRAINT `fk_common_question_has_external_link_common_question1`
         FOREIGN KEY (`common_question_id`)
-            REFERENCES `health_app`.`common_question` (`common_question_id`),
+            REFERENCES `health_app`.`common_question` (`id`),
     CONSTRAINT `fk_common_question_has_external_link_external_link1`
         FOREIGN KEY (`external_link_id`)
-            REFERENCES `health_app`.`external_link` (`external_link_id`))
+            REFERENCES `health_app`.`external_link` (`id`))
     ENGINE = InnoDB;

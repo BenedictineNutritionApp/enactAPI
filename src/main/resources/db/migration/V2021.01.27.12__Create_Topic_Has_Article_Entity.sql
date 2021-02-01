@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS `topic_has_article`
     INDEX `fk_topic_has_article_topic1_idx` (`topic_id` ASC) VISIBLE,
     CONSTRAINT `fk_topic_has_article_article1`
         FOREIGN KEY (`article_id`)
-            REFERENCES `health_app`.`article` (`article_id`),
+            REFERENCES `health_app`.`article` (`id`),
     CONSTRAINT `fk_topic_has_article_topic1`
         FOREIGN KEY (`topic_id`)
-            REFERENCES `health_app`.`topic` (`topic_id`))
+            REFERENCES `health_app`.`topic` (`id`))
     ENGINE = InnoDB;
