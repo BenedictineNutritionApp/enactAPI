@@ -62,8 +62,9 @@ public class EnactApiApplication {
             System.out.println("FILE NOT FOUND. CHECK PATH/NAME");
             e.printStackTrace();
         }
-        // Parse each line of the csv
+        // Skip the header information
         fileReader.nextLine();
+        // Parse each line of the csv
         while (fileReader.hasNextLine()) {
             String line = fileReader.nextLine();
             String[] foodInfo = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
