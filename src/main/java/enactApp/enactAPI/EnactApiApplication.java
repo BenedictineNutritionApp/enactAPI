@@ -1,20 +1,9 @@
 package enactApp.enactAPI;
 
-import enactApp.enactAPI.data.model.Food;
-import enactApp.enactAPI.data.model.NccFoodGroupCategory;
-import enactApp.enactAPI.data.repository.FoodRepository;
-import enactApp.enactAPI.data.repository.NccFoodGroupCategoryRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Scanner;
 
 @SpringBootApplication
 public class EnactApiApplication {
