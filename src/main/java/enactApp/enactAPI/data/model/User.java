@@ -21,19 +21,19 @@ public class User extends AbstractEntity {
 //public class User extends AbstractEntity implements UserDetails, CredentialsContainer {
 
 
-    @Column(name = "user_email")
+    @Column(name = "email")
     private String userEmail;
 
-    @Column(name = "user_password")
+    @Column(name = "password")
     private String userPassword;
 
-    @Column(name = "user_first_name")
+    @Column(name = "first_name")
     private String userFirstName;
 
-    @Column(name = "user_last_name")
+    @Column(name = "last_name")
     private String userLastName;
 
-    @Column(name = "user_avatar_id")
+    @Column(name = "avatar_id")
     private int userAvatarId;
 
     @Column(name = "is_admin")
