@@ -109,5 +109,18 @@ public class UserController {
         return encodedPass;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200/", allowedHeaders = "*")
+    @GetMapping(value = "api/users/checkIfEmailExists/{email}")
+    public boolean checkIfEmailExists(@PathVariable String email) {
+        // If the user does not exist currently
+        Optional<User> optionalUser = userRepository.findByUserEmail(email);
+        if (optionalUser.isPresent()) {
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
 
 }
