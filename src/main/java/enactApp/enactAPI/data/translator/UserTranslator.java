@@ -8,7 +8,7 @@ public class UserTranslator {
     public static UserView entityToView(final User user) {
         return UserView.builder()
                 .firstName(user.getFirstName())
-                .avatarId(user.getAvatarId())
+//                .avatarId(user.getAvatarId())
                 .build();
     }
 
