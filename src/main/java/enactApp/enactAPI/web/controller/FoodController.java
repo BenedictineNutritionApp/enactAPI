@@ -3,15 +3,11 @@ package enactApp.enactAPI.web.controller;
 
 import enactApp.enactAPI.data.model.Food;
 import enactApp.enactAPI.data.repository.FoodRepository;
-import enactApp.enactAPI.data.repository.FoodRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -28,16 +24,21 @@ public class FoodController {
         this.foodRepository = foodRepository;
     }
 
-    public ArrayList<Food> getAllFood() {
-        ArrayList<Food> food = new ArrayList<>();
 
-        return food;
+    /**
+     * @return A list of all food objects in the database
+     */
+    @GetMapping(value = "/api/food/all/")
+    public List<Food> getAllFood() {
+        return foodRepository.findAll();
     }
 
-
-    @GetMapping(value = "/message")
-    public String getMessage() {
-        return "HTTPS Working";
+    /**
+     * @return A list of all food objects in the database that match
+     */
+    @GetMapping(value = "/api/food/{description}")
+    public List<Food> searchFood(@PathVariable String description) {
+        return foodRepository.findFoodByDescription(description);
     }
 
 
