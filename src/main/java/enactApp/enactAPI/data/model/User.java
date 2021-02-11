@@ -22,23 +22,22 @@ public class User extends AbstractEntity {
 
 
     @Column(name = "email")
-    private String userEmail;
+    private String email;
 
     @Column(name = "password")
-    private String userPassword;
+    private String password;
 
     @Column(name = "first_name")
-    private String userFirstName;
+    private String firstName;
 
     @Column(name = "last_name")
-    private String userLastName;
+    private String lastName;
 
-    @Column(name = "avatar_id")
-    private int userAvatarId;
-
-    @Column(name = "is_admin")
-    private boolean isAdmin;
-
+//    @Column(name = "avatar_id")
+//    private int avatarId;
+//
+//    @Column(name = "is_admin")
+//    private boolean isAdmin;
 
 
 //    @Override
