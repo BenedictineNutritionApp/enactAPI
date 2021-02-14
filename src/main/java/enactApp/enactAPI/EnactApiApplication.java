@@ -79,7 +79,7 @@ public class EnactApiApplication {
             double carbohydratesInGrams;
             double fiberInGrams;
             double calciumInMilligrams;
-            double sodiumInGrams;
+            double sodiumInMilligrams;
             double saturatedFattyAcidsInGrams;
             double cholesterolInMilligrams;
 
@@ -121,9 +121,9 @@ public class EnactApiApplication {
             }
 
             if (foodInfo[13].isEmpty()) {
-                sodiumInGrams = 0;
+                sodiumInMilligrams = 0;
             } else {
-                sodiumInGrams = Double.parseDouble(foodInfo[13]);
+                sodiumInMilligrams = Double.parseDouble(foodInfo[13]);
             }
 
             if (foodInfo[14].isEmpty()) {
@@ -172,7 +172,7 @@ public class EnactApiApplication {
                     .carbohydratesInGrams(carbohydratesInGrams)
                     .fiberInGrams(fiberInGrams)
                     .calciumInMilligrams(calciumInMilligrams)
-                    .sodiumInGrams(sodiumInGrams)
+                    .sodiumInMilligrams(sodiumInMilligrams)
                     .saturatedFattyAcidsInGrams(saturatedFattyAcidsInGrams)
                     .cholesterolInMilligrams(cholesterolInMilligrams)
                     .sugarInGrams(sugarInGrams)
