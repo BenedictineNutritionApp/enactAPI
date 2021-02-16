@@ -94,22 +94,22 @@ public class UserController {
 
     @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
     @PostMapping(value = "api/users/save/{userId}/{birthDate}/{race}/{ethnicity}/{height}/{weight}/{activityLevel}/{gIIssues}/{colonCancer}/{colonStage}/{rectumCancer}/{rectumStage}/{lastDiagDate}/{surgery}/{radiation}/{chemotherapy}/{surgeryType}")
-    public String createUser(@PathVariable Long userId, @PathVariable String birthDate,
-                             @PathVariable String race,
-                             @PathVariable String ethnicity,
-                             @PathVariable String height,
-                             @PathVariable String weight,
-                             @PathVariable String activityLevel,
-                             @PathVariable String gIIssues,
-                             @PathVariable String colonCancer,
-                             @PathVariable String colonStage,
-                             @PathVariable String rectumCancer,
-                             @PathVariable String rectumStage,
-                             @PathVariable String lastDiagDate,
-                             @PathVariable String surgery,
-                             @PathVariable String radiation,
-                             @PathVariable String chemotherapy,
-                             @PathVariable String surgeryType) throws ParseException {
+    public String saveUserInfo(@PathVariable Long userId, @PathVariable String birthDate,
+                               @PathVariable String race,
+                               @PathVariable String ethnicity,
+                               @PathVariable String height,
+                               @PathVariable String weight,
+                               @PathVariable String activityLevel,
+                               @PathVariable String gIIssues,
+                               @PathVariable String colonCancer,
+                               @PathVariable String colonStage,
+                               @PathVariable String rectumCancer,
+                               @PathVariable String rectumStage,
+                               @PathVariable String lastDiagDate,
+                               @PathVariable String surgery,
+                               @PathVariable String radiation,
+                               @PathVariable String chemotherapy,
+                               @PathVariable String surgeryType) throws ParseException {
         //Checks if the entered email is already in use
         Optional<User> optionalUser = userRepository.findUserById(userId);
         if (optionalUser.isEmpty()) {
@@ -120,8 +120,8 @@ public class UserController {
         user.setDateOfBirth(newDate);
         user.setRace(race);
         user.setEthnicity(ethnicity);
-        user.setHeight(Integer.parseInt(height));
-        user.setWeight(Integer.parseInt(weight));
+        user.setHeight(Long.parseLong(height));
+        user.setWeight(Long.parseLong(weight));
 
         Optional<ActivityLevel> activityLevelFromDB = activityLevelRepository.findActivityLevelByLevel(activityLevel);
         if (activityLevelFromDB.isEmpty()) {
@@ -152,7 +152,7 @@ public class UserController {
             userHasFrequentGiIssues.setUserId(userId);
             userHasFrequentGiIssues.setFrequentGiIssuesId(frequentGiIssuesId);
             userHasFrequentGiIssueRepository.save(userHasFrequentGiIssues);
-            user.setActivityLevelId(activityLevelId);
+//            user.setActivityLevelId(activityLevelId);
         }
 
 

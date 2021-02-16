@@ -38,22 +38,22 @@ public class User extends AbstractEntity {
     private String lastName;
 
     @Column(name = "avatar_id")
-    private int avatarId;
+    private Long avatarId;
 
     @Column(name = "is_admin")
-    private boolean isAdmin;
+    private Boolean isAdmin;
 
     @Column(name = "height")
-    private int height;
+    private Long height;
 
     @Column(name = "weight")
-    private int weight;
+    private Long weight;
 
     @Column(name = "activity_level_id")
-    private long activityLevelId;
+    private Long activityLevelId;
 
     @Column(name = "cancer_treatment_id")
-    private long cancerTreatmentId;
+    private Long cancerTreatmentId;
 
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
