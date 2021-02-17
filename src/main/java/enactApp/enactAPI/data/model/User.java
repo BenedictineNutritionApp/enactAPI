@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
 
 @SuperBuilder
 @Getter
@@ -24,6 +25,9 @@ public class User extends AbstractEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "username")
+    private String username;
+
     @Column(name = "password")
     private String password;
 
@@ -33,41 +37,36 @@ public class User extends AbstractEntity {
     @Column(name = "last_name")
     private String lastName;
 
-//    @Column(name = "avatar_id")
-//    private int avatarId;
-//
-//    @Column(name = "is_admin")
-//    private boolean isAdmin;
+    @Column(name = "avatar_id")
+    private Long avatarId;
+
+    @Column(name = "is_admin")
+    private Boolean isAdmin;
+
+    @Column(name = "height")
+    private Long height;
+
+    @Column(name = "weight")
+    private Long weight;
+
+    @Column(name = "activity_level_id")
+    private Long activityLevelId;
+
+    @Column(name = "cancer_treatment_id")
+    private Long cancerTreatmentId;
+
+    @Column(name = "date_of_birth")
+    private Date dateOfBirth;
+
+    @Column(name = "race")
+    private String race;
+
+    @Column(name = "ethnicity")
+    private String ethnicity;
+
+    @Column(name = "gender")
+    private String gender;
 
 
-//    @Override
-//    public void eraseCredentials() {
-//
-//    }
-//
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return null;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonExpired() {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonLocked() {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean isCredentialsNonExpired() {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean isEnabled() {
-//        return false;
-//    }
 }
 

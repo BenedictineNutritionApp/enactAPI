@@ -36,9 +36,9 @@ public class FoodController {
     /**
      * @return A list of all food objects in the database that match
      */
-    @GetMapping(value = "/api/food/{description}")
-    public List<Food> searchFood(@PathVariable String description) {
-        return foodRepository.findFoodByDescription(description);
+    @GetMapping(value = "/api/food/{query}")
+    public List<Food> searchFood(@PathVariable String query) {
+        return foodRepository.findFoodByDescriptionContaining(query);
     }
 
 

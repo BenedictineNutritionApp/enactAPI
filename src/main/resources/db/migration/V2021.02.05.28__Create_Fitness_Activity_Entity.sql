@@ -1,7 +1,9 @@
-CREATE TABLE IF NOT EXISTS `daily_food_log`
+CREATE TABLE IF NOT EXISTS `fitness_activity`
 (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `date` DATE NOT NULL,
+    `type` VARCHAR(64) NOT NULL,
+    `minutes` VARCHAR(64) NOT NULL,
+    `intensity` VARCHAR(1) NOT NULL,
     `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
