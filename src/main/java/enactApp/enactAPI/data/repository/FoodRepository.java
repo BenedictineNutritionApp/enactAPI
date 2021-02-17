@@ -13,6 +13,7 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
 
     Optional<Food> findFoodByKeylist(String keylist);
     List<Food> findFoodByDescription(String description);
+    List<Food> findFoodByDescriptionContaining(String description);
     List<Food> findAll();
 
 

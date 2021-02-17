@@ -1,12 +1,20 @@
 package enactApp.enactAPI.web.controller;
 
+import enactApp.enactAPI.data.model.ActivityLevel;
+import enactApp.enactAPI.data.model.FrequentGiIssues;
 import enactApp.enactAPI.data.model.User;
+import enactApp.enactAPI.data.model.UserHasFrequentGiIssues;
+import enactApp.enactAPI.data.repository.ActivityLevelRepository;
+import enactApp.enactAPI.data.repository.FrequentGiIssueRepository;
+import enactApp.enactAPI.data.repository.UserHasFrequentGiIssuesRepository;
 import enactApp.enactAPI.data.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
@@ -20,9 +28,15 @@ public class UserController {
 
     @Autowired
     private final UserRepository userRepository;
+    private final ActivityLevelRepository activityLevelRepository;
+    private final FrequentGiIssueRepository frequentGiIssueRepository;
+    private final UserHasFrequentGiIssuesRepository userHasFrequentGiIssueRepository;
 
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, ActivityLevelRepository activityLevelRepository, FrequentGiIssueRepository frequentGiIssueRepository, UserHasFrequentGiIssuesRepository userHasFrequentGiIssueRepository) {
         this.userRepository = userRepository;
+        this.activityLevelRepository = activityLevelRepository;
+        this.frequentGiIssueRepository = frequentGiIssueRepository;
+        this.userHasFrequentGiIssueRepository = userHasFrequentGiIssueRepository;
     }
 
 
@@ -76,6 +90,74 @@ public class UserController {
             return "invalid";
         }
         return "valid";
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+    @PostMapping(value = "api/users/save/{userId}/{birthDate}/{race}/{ethnicity}/{height}/{weight}/{activityLevel}/{gIIssues}/{colonCancer}/{colonStage}/{rectumCancer}/{rectumStage}/{lastDiagDate}/{surgery}/{radiation}/{chemotherapy}/{surgeryType}")
+    public String saveUserInfo(@PathVariable Long userId, @PathVariable String birthDate,
+                               @PathVariable String race,
+                               @PathVariable String ethnicity,
+                               @PathVariable String height,
+                               @PathVariable String weight,
+                               @PathVariable String activityLevel,
+                               @PathVariable String gIIssues,
+                               @PathVariable String colonCancer,
+                               @PathVariable String colonStage,
+                               @PathVariable String rectumCancer,
+                               @PathVariable String rectumStage,
+                               @PathVariable String lastDiagDate,
+                               @PathVariable String surgery,
+                               @PathVariable String radiation,
+                               @PathVariable String chemotherapy,
+                               @PathVariable String surgeryType) throws ParseException {
+        //Checks if the entered email is already in use
+        System.out.println("GOT HERE");
+        Optional<User> optionalUser = userRepository.findUserById(userId);
+        if (optionalUser.isEmpty()) {
+            return "error";
+        }
+        User user = optionalUser.get();
+        Date newDate = new SimpleDateFormat("yyyy-MM-dd").parse(birthDate.split(" ")[0]);
+        user.setDateOfBirth(newDate);
+        user.setRace(race);
+        user.setEthnicity(ethnicity);
+        user.setHeight(Long.parseLong(height));
+        user.setWeight(Long.parseLong(weight));
+
+        Optional<ActivityLevel> activityLevelFromDB = activityLevelRepository.findActivityLevelByLevel(activityLevel);
+        if (activityLevelFromDB.isEmpty()) {
+            ActivityLevel newActivityLevel = new ActivityLevel();
+            newActivityLevel.setLevel(activityLevel);
+            newActivityLevel.setCreated(new Date());
+            newActivityLevel.setUpdated(new Date());
+            activityLevelRepository.save(newActivityLevel);
+        }
+        activityLevelFromDB = activityLevelRepository.findActivityLevelByLevel(activityLevel);
+        Long activityLevelId = activityLevelFromDB.get().getId();
+        user.setActivityLevelId(activityLevelId);
+
+
+        String[] issues = gIIssues.split(",");
+        for (String issue : issues) {
+            Optional<FrequentGiIssues> frequentGiIssuesFromDB = frequentGiIssueRepository.findFrequentGiIssuesByIssue(issue);
+            if (frequentGiIssuesFromDB.isEmpty()) {
+                FrequentGiIssues newFrequentGiIssues = new FrequentGiIssues();
+                newFrequentGiIssues.setIssue(issue);
+                newFrequentGiIssues.setCreated(new Date());
+                newFrequentGiIssues.setUpdated(new Date());
+                frequentGiIssueRepository.save(newFrequentGiIssues);
+            }
+            frequentGiIssuesFromDB = frequentGiIssueRepository.findFrequentGiIssuesByIssue(issue);
+            Long frequentGiIssuesId = frequentGiIssuesFromDB.get().getId();
+            UserHasFrequentGiIssues userHasFrequentGiIssues = new UserHasFrequentGiIssues();
+            userHasFrequentGiIssues.setUserId(userId);
+            userHasFrequentGiIssues.setFrequentGiIssuesId(frequentGiIssuesId);
+            userHasFrequentGiIssueRepository.save(userHasFrequentGiIssues);
+//            user.setActivityLevelId(activityLevelId);
+        }
+
+
+        return "";
     }
 
 
