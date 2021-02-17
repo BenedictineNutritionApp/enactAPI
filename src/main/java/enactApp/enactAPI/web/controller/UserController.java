@@ -111,6 +111,7 @@ public class UserController {
                                @PathVariable String chemotherapy,
                                @PathVariable String surgeryType) throws ParseException {
         //Checks if the entered email is already in use
+        System.out.println("GOT HERE");
         Optional<User> optionalUser = userRepository.findUserById(userId);
         if (optionalUser.isEmpty()) {
             return "error";
