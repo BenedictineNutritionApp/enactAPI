@@ -46,7 +46,6 @@ public class UserController {
         // If the user does not exist currently
         Optional<User> optionalUser = userRepository.findUserByEmail(email);
         return optionalUser.isPresent();
-
     }
 
     /**
