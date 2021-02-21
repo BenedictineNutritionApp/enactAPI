@@ -33,6 +33,7 @@ public class User extends AbstractEntity {
     @Column(name = "last_name")
     private String lastName;
 
+
 //    @Column(name = "avatar_id")
 //    private int avatarId;
 //

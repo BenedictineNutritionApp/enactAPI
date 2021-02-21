@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +28,10 @@ public class FitnessActivityController {
 
     @GetMapping(value = "/api/fitnessActivity/all")
     public List<FitnessActivity> getAllFitnessActivity() {
-        return fitnessActivityRepository.findAll();
+        List<FitnessActivity> fitnessActivityList = fitnessActivityRepository.findAll();
+        Collections.sort(fitnessActivityList);
+        return fitnessActivityList;
+//        return fitnessActivityRepository.findAll();
     }
 
 //    @PostMapping(value = "api/fitnessActivity/add/{type}/{intensity}/{minutes}")
@@ -38,11 +42,12 @@ public class FitnessActivityController {
 //    }
 
     @PostMapping(path = "/api/fitnessActivity/add/")
-    public boolean saveFitnessActivity(@RequestBody FitnessActivity fitnessActivity){
+    public boolean saveFitnessActivity(@RequestBody FitnessActivity fitnessActivity) {
         FitnessActivity newFitnessActivity = new FitnessActivity();
         newFitnessActivity.setIntensity(fitnessActivity.getIntensity());
         newFitnessActivity.setMinutes(fitnessActivity.getMinutes());
         newFitnessActivity.setType(fitnessActivity.getType());
+        newFitnessActivity.setDateTime(fitnessActivity.getDateTime());
         newFitnessActivity.setUpdated(new Date());
         newFitnessActivity.setCreated(new Date());
         fitnessActivityRepository.save(newFitnessActivity);
