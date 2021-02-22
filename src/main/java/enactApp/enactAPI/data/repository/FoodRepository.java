@@ -11,7 +11,8 @@ import java.util.Optional;
  */
 public interface FoodRepository extends JpaRepository<Food, Long> {
 
-    Optional<Food> findFoodByKeylist(String keylist);
+    Optional<Food> findFoodByBaseIdAndCommonPortionSizeUnitId(Integer baseId, Long commonPortionSizeUnitId);
+    Optional<Food> findFoodById(Long id);
     List<Food> findFoodByDescription(String description);
     List<Food> findFoodByDescriptionContaining(String description);
     List<Food> findAll();
