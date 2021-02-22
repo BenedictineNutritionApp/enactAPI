@@ -94,6 +94,17 @@ public class UserController {
         return "valid";
     }
 
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+    @GetMapping(value = "api/users/formstatus/{userId}/")
+    public Boolean getFormCompletionStatus(@PathVariable String userId) throws ParseException {
+        Optional<User> optionalUser = userRepository.findUserById(Long.parseLong(userId));
+        if (optionalUser.isEmpty()) {
+            return false;
+        }
+        User user = optionalUser.get();
+        return user.getColorectal() != null;
+    }
+
 
     @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
     @PostMapping(value = "api/users/form/save/")
