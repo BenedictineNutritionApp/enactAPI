@@ -96,7 +96,7 @@ public class UserController {
 
     @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
     @GetMapping(value = "api/users/formstatus/{userId}/")
-    public Boolean getFormCompletionStatus(@PathVariable String userId) throws ParseException {
+    public Boolean getFormCompletionStatus(@PathVariable String userId) {
         Optional<User> optionalUser = userRepository.findUserById(Long.parseLong(userId));
         if (optionalUser.isEmpty()) {
             return false;
