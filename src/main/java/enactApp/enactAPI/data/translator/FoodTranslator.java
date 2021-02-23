@@ -1,0 +1,71 @@
+package enactApp.enactAPI.data.translator;
+
+
+import enactApp.enactAPI.data.model.Food;
+import enactApp.enactAPI.data.service.FoodService;
+import enactApp.enactAPI.web.models.FoodView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class FoodTranslator {
+    public static FoodView entityToView(final Food food) {
+        return FoodView.builder()
+                .id(food.getId())
+                .baseId(food.getBaseId())
+                .description(food.getDescription())
+                .kcal(food.getKcal())
+                .proteinInGrams(food.getProteinInGrams())
+                .fatInGrams(food.getFatInGrams())
+                .carbohydratesInGrams(food.getCarbohydratesInGrams())
+                .solubleFiberInGrams(food.getSolubleFiberInGrams())
+                .insolubleFiberInGrams(food.getInsolubleFiberInGrams())
+                .calciumInMilligrams(food.getCalciumInMilligrams())
+                .sodiumInMilligrams(food.getSodiumInMilligrams())
+                .saturatedFattyAcidsInGrams(food.getSaturatedFattyAcidsInGrams())
+                .polyunsaturatedFattyAcidsInGrams(food.getPolyunsaturatedFattyAcidsInGrams())
+                .monounsaturatedFattyAcidsInGrams(food.getMonounsaturatedFattyAcidsInGrams())
+                .sugarInGrams(food.getSugarInGrams())
+                .alcoholInGrams(food.getAlcoholInGrams())
+                .vitaminDInMicrograms(food.getVitaminDInMicrograms())
+                .commonPortionSizeAmount(food.getCommonPortionSizeAmount())
+                .commonPortionSizeGramWeight(food.getCommonPortionSizeGramWeight())
+                .commonPortionSizeDescription(FoodService.getCommonPortionSizeDescription(food.getCommonPortionSizeDescriptionId()))
+                .commonPortionSizeUnit(FoodService.getCommonPortionSizeUnit(food.getCommonPortionSizeUnitId()))
+                .build();
+    }
+
+    public static List<FoodView> entitiesToViews(final List<Food> foods) {
+        ArrayList<FoodView> foodViews = new ArrayList<>();
+        for(Food food: foods) {
+            foodViews.add(
+                    FoodView.builder()
+                            .id(food.getId())
+                            .baseId(food.getBaseId())
+                            .description(food.getDescription())
+                            .kcal(food.getKcal())
+                            .proteinInGrams(food.getProteinInGrams())
+                            .fatInGrams(food.getFatInGrams())
+                            .carbohydratesInGrams(food.getCarbohydratesInGrams())
+                            .solubleFiberInGrams(food.getSolubleFiberInGrams())
+                            .insolubleFiberInGrams(food.getInsolubleFiberInGrams())
+                            .calciumInMilligrams(food.getCalciumInMilligrams())
+                            .sodiumInMilligrams(food.getSodiumInMilligrams())
+                            .saturatedFattyAcidsInGrams(food.getSaturatedFattyAcidsInGrams())
+                            .polyunsaturatedFattyAcidsInGrams(food.getPolyunsaturatedFattyAcidsInGrams())
+                            .monounsaturatedFattyAcidsInGrams(food.getMonounsaturatedFattyAcidsInGrams())
+                            .sugarInGrams(food.getSugarInGrams())
+                            .alcoholInGrams(food.getAlcoholInGrams())
+                            .vitaminDInMicrograms(food.getVitaminDInMicrograms())
+                            .commonPortionSizeAmount(food.getCommonPortionSizeAmount())
+                            .commonPortionSizeGramWeight(food.getCommonPortionSizeGramWeight())
+                            .commonPortionSizeDescription(FoodService.getCommonPortionSizeDescription(food.getCommonPortionSizeDescriptionId()))
+                            .commonPortionSizeUnit(FoodService.getCommonPortionSizeUnit(food.getCommonPortionSizeUnitId()))
+                            .build()
+            );
+        }
+        return foodViews;
+    }
+
+
+}
