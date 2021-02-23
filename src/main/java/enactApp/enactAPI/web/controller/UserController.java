@@ -58,22 +58,12 @@ public class UserController {
      * @param user The user
      * @return The string containing the error type or successful registration pop up
      */
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @PostMapping(value = "api/users/register")
-    public String createUser(@Valid @RequestBody User user) {
-        //Checks if the entered email is already in use
-        Optional<User> optionalUser = userRepository.findUserByEmail(user.getEmail());
-        if (optionalUser.isPresent()) {
-            return "Username already taken";
-        }
-        //Sets the user's details and saves them to the database
-//        user.setPassword(encode(user.getPassword()));
-        user.setPassword(user.getPassword());
-        user.setCreated(new Date());
-        user.setUpdated(new Date());
-        userRepository.save(user);
+    @PostMapping(path = "api/users/register/")
+    public boolean createUser(@RequestBody User user) {
         System.out.println(user.getEmail());
-        return "Registration Successful. You have been logged in.";
+        System.out.println(user.getPassword());
+        userRepository.save(user);
+        return true;
     }
 
 

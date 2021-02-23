@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @SuperBuilder
 @Getter
@@ -19,7 +20,7 @@ import javax.persistence.Table;
 @ToString
 @Entity
 @Table(name = "fitness_activity")
-public class FitnessActivity extends AbstractEntity{
+public class FitnessActivity extends AbstractEntity implements Comparable<FitnessActivity>{
 
     @Column(name = "type")
     private String type;
@@ -30,4 +31,12 @@ public class FitnessActivity extends AbstractEntity{
     @Column(name = "intensity")
     private String intensity;
 
+    @Column(name = "date_time")
+    private LocalDateTime dateTime;
+
+    @Override
+    public int compareTo(FitnessActivity o) {
+        return o.getDateTime().compareTo(getDateTime());
+//        return getDateTime().compareTo(o.getDateTime());
+    }
 }
