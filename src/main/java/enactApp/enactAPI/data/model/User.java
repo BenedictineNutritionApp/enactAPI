@@ -40,8 +40,14 @@ public class User extends AbstractEntity {
     @Column(name = "avatar_id")
     private Long avatarId;
 
-    @Column(name = "is_admin")
-    private Boolean isAdmin;
+    @Column(name = "colorectal")
+    private Boolean colorectal;
+
+    @Column(name = "stage")
+    private Long stage;
+
+    @Column(name = "diagnosis_date")
+    private Date diagnosisDate;
 
     @Column(name = "height")
     private Long height;
@@ -51,9 +57,6 @@ public class User extends AbstractEntity {
 
     @Column(name = "activity_level_id")
     private Long activityLevelId;
-
-    @Column(name = "cancer_treatment_id")
-    private Long cancerTreatmentId;
 
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
@@ -66,6 +69,9 @@ public class User extends AbstractEntity {
 
     @Column(name = "gender")
     private String gender;
+
+    @Column(name = "screener_completed")
+    private Boolean screenerCompleted;
 
 
 }

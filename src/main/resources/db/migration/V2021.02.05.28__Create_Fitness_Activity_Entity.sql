@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS `fitness_activity`
     `type` VARCHAR(64) NOT NULL,
     `minutes` VARCHAR(64) NOT NULL,
     `intensity` VARCHAR(1) NOT NULL,
+    `date_time` DATETIME NOT NULL,
     `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),

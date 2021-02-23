@@ -20,7 +20,7 @@ import javax.persistence.Table;
 public class Food extends AbstractEntity {
 
     @Column(name = "base_id")
-    private int baseId;
+    private Integer baseId;
 
     @Column(name = "keylist")
     private String keylist;
@@ -32,106 +32,118 @@ public class Food extends AbstractEntity {
     private String foodType;
 
     @Column(name = "ncc_food_group_category_id")
-    private long nccFoodGroupCategoryId;
+    private Long nccFoodGroupCategoryId;
 
     @Column(name = "kcal")
-    private double kcal;
+    private Double kcal;
 
     @Column(name = "protein_in_grams")
-    private double proteinInGrams;
+    private Double proteinInGrams;
 
     @Column(name = "fat_in_grams")
-    private double fatInGrams;
+    private Double fatInGrams;
 
     @Column(name = "carbohydrates_in_grams")
-    private double carbohydratesInGrams;
+    private Double carbohydratesInGrams;
 
     @Column(name = "fiber_in_grams")
-    private double fiberInGrams;
+    private Double fiberInGrams;
 
     @Column(name = "soluble_fiber_in_grams")
-    private double solubleFiberInGrams;
+    private Double solubleFiberInGrams;
 
     @Column(name = "insoluble_fiber_in_grams")
-    private double insolubleFiberInGrams;
+    private Double insolubleFiberInGrams;
 
     @Column(name = "calcium_in_milligrams")
-    private double calciumInMilligrams;
+    private Double calciumInMilligrams;
 
     @Column(name = "sodium_in_milligrams")
-    private double sodiumInMilligrams;
+    private Double sodiumInMilligrams;
 
     @Column(name = "saturated_fatty_acids_in_grams")
-    private double saturatedFattyAcidsInGrams;
+    private Double saturatedFattyAcidsInGrams;
 
     @Column(name = "polyunsaturated_fatty_acids_in_grams")
-    private double polyunsaturatedFattyAcidsInGrams;
+    private Double polyunsaturatedFattyAcidsInGrams;
 
     @Column(name = "monounsaturated_fatty_acids_in_grams")
-    private double monounsaturatedFattyAcidsInGrams;
+    private Double monounsaturatedFattyAcidsInGrams;
 
     @Column(name = "cholesterol_in_milligrams")
-    private double cholesterolInMilligrams;
+    private Double cholesterolInMilligrams;
 
     @Column(name = "sugar_in_grams")
-    private double sugarInGrams;
+    private Double sugarInGrams;
 
     @Column(name = "added_sugars_in_grams")
-    private double addedSugarsInGrams;
+    private Double addedSugarsInGrams;
 
     @Column(name = "alcohol_in_grams")
-    private double alcoholInGrams;
+    private Double alcoholInGrams;
 
     @Column(name = "caffeine_in_milligrams")
-    private double caffeineInMilligrams;
+    private Double caffeineInMilligrams;
 
     @Column(name = "iron_in_milligrams")
-    private double ironInMilligrams;
+    private Double ironInMilligrams;
 
     @Column(name = "potassium_in_milligrams")
-    private double potassiumInMilligrams;
+    private Double potassiumInMilligrams;
 
     @Column(name = "phosphorus_in_milligrams")
-    private double phosphorusInMilligrams;
+    private Double phosphorusInMilligrams;
 
     @Column(name = "thiamin_in_milligrams")
-    private double thiaminInMilligrams;
+    private Double thiaminInMilligrams;
 
     @Column(name = "riboflavin_in_milligrams")
-    private double riboflavinInMilligrams;
+    private Double riboflavinInMilligrams;
 
     @Column(name = "niacin_in_milligrams")
-    private double niacinInMilligrams;
+    private Double niacinInMilligrams;
 
     @Column(name = "pantothenic_acid_in_milligrams")
-    private double pantothenicAcidInMilligrams;
+    private Double pantothenicAcidInMilligrams;
 
     @Column(name = "vitamin_b6_in_milligrams")
-    private double vitaminB6InMilligrams;
+    private Double vitaminB6InMilligrams;
 
     @Column(name = "vitamin_b12_in_micrograms")
-    private double vitaminB12InMicrograms;
+    private Double vitaminB12InMicrograms;
 
     @Column(name = "vitamin_c_in_milligrams")
-    private double vitaminCInMilligrams;
+    private Double vitaminCInMilligrams;
 
     @Column(name = "folate_in_micrograms")
-    private double folateInMicrograms;
+    private Double folateInMicrograms;
 
     @Column(name = "vitamin_a_in_international_units")
-    private double vitaminAInInternationalUnits;
+    private Double vitaminAInInternationalUnits;
 
     @Column(name = "beta_carotene_in_micrograms")
-    private double betaCaroteneInMicrograms;
+    private Double betaCaroteneInMicrograms;
 
     @Column(name = "lycopene_in_micrograms")
-    private double lycopeneInMicrograms;
+    private Double lycopeneInMicrograms;
 
     @Column(name = "vitamin_d_in_micrograms")
-    private double vitaminDInMicrograms;
+    private Double vitaminDInMicrograms;
 
     @Column(name = "vitamin_e_in_international_units")
-    private double vitaminEInInternationalUnits;
+    private Double vitaminEInInternationalUnits;
+
+    @Column(name = "common_portion_size_amount")
+    private Double commonPortionSizeAmount;
+
+    @Column(name = "common_portion_size_gram_weight")
+    private Double commonPortionSizeGramWeight;
+
+    @Column(name = "common_portion_size_description_id")
+    private Long commonPortionSizeDescriptionId;
+
+    @Column(name = "common_portion_size_unit_id")
+    private Long commonPortionSizeUnitId;
 
 }
 
