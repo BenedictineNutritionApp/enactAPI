@@ -70,6 +70,9 @@ public class User extends AbstractEntity {
     @Column(name = "gender")
     private String gender;
 
+    @Column(name = "screener_completed")
+    private Boolean screenerCompleted;
+
 
 }
 

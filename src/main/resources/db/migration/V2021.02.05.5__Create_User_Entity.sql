@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `user`
     `race` VARCHAR(64) NULL DEFAULT NULL,
     `ethnicity` VARCHAR(64) NULL DEFAULT NULL,
     `gender` VARCHAR(32) NULL DEFAULT NULL,
+    `screener_completed` TINYINT NULL DEFAULT false,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `iduser_UNIQUE` (`id` ASC) VISIBLE,
     UNIQUE INDEX `user_email_UNIQUE` (`email` ASC) VISIBLE,

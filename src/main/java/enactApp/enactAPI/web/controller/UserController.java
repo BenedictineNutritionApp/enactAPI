@@ -6,6 +6,7 @@ import enactApp.enactAPI.data.translator.FoodLogEntryTranslator;
 import enactApp.enactAPI.web.models.FoodLogEntryView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -91,18 +92,22 @@ public class UserController {
         if (!password.equals(storedPass)) {
             return "invalid";
         }
+
         return "valid";
     }
 
     @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @GetMapping(value = "api/users/formstatus/{userId}/")
-    public Boolean getFormCompletionStatus(@PathVariable String userId) {
-        Optional<User> optionalUser = userRepository.findUserById(Long.parseLong(userId));
+    @GetMapping(value = "api/users/formstatus/{email}")
+    public String getFormCompletionStatus(@PathVariable String email) {
+        Optional<User> optionalUser = userRepository.findUserByEmail(email);
         if (optionalUser.isEmpty()) {
-            return false;
+            return "false";
         }
         User user = optionalUser.get();
-        return user.getColorectal() != null;
+        if(user.getScreenerCompleted()) {
+            return "true";
+        }
+        return "false";
     }
 
 
@@ -155,6 +160,7 @@ public class UserController {
         userFromDB.setStage(Long.parseLong(formModel.getColorectalStage().split(" ")[1]));
         Date lastDiagDate = new SimpleDateFormat("yyyy-MM-dd").parse(formModel.getLastDiagDate());
         userFromDB.setDiagnosisDate(lastDiagDate);
+        userFromDB.setScreenerCompleted(true);
 
         CancerTreatment cancerTreatment = CancerTreatment.builder()
                 .surgery(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[0]))
@@ -187,16 +193,14 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @PostMapping(value = "api/users/foodlog/save/{entryTime}")
-    public String saveNewFoodLog(@Valid @RequestBody FoodLogEntry foodLogEntry, @PathVariable String entryTime) throws ParseException {
+    @PostMapping(value = "api/users/foodlog/save/")
+    public String saveNewFoodLog(@Valid @RequestBody FoodLogEntryModel foodLogEntryModel) throws ParseException {
         FoodLogEntry newFoodLogEntry = new FoodLogEntry();
-        Date newDate = new SimpleDateFormat("yyyy-MM-dd").parse(entryTime.split(" ")[0]);
-        Date newEntryTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(entryTime);
-        newFoodLogEntry.setEntryTime(newEntryTime);
-        newFoodLogEntry.setDate(newDate);
-        newFoodLogEntry.setPortion(foodLogEntry.getPortion());
-        newFoodLogEntry.setUserId(foodLogEntry.getUserId());
-        newFoodLogEntry.setFoodId(foodLogEntry.getFoodId());
+        newFoodLogEntry.setEntryTime(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(foodLogEntryModel.getEntryTime()));
+        newFoodLogEntry.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(foodLogEntryModel.getEntryTime().split(" ")[0]));
+        newFoodLogEntry.setPortion(foodLogEntryModel.getPortion());
+        newFoodLogEntry.setUserId(foodLogEntryModel.getUserId());
+        newFoodLogEntry.setFoodId(foodLogEntryModel.getFoodId());
         newFoodLogEntry.setCreated(new Date());
         newFoodLogEntry.setUpdated(new Date());
         foodLogEntryRepository.save(newFoodLogEntry);
@@ -204,15 +208,15 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @PutMapping(value = "api/users/foodlog/update")
-    public String updateFoodLog(@Valid @RequestBody FoodLogEntry foodLogEntry) {
-        Optional<FoodLogEntry> optionalFoodLogEntry = foodLogEntryRepository.findFoodLogEntryById(foodLogEntry.getId());
+    @PostMapping(value = "api/users/foodlog/update")
+    public String updateFoodLog(@Valid @RequestBody FoodLogEntryModel foodLogEntryModel) throws ParseException {
+        Optional<FoodLogEntry> optionalFoodLogEntry = foodLogEntryRepository.findFoodLogEntryById(foodLogEntryModel.getId());
         if (optionalFoodLogEntry.isEmpty()) {
             return "error updating";
         }
         FoodLogEntry foodLogEntryFromDB = optionalFoodLogEntry.get();
-        foodLogEntryFromDB.setEntryTime(foodLogEntry.getDate());
-        foodLogEntryFromDB.setPortion(foodLogEntry.getPortion());
+        foodLogEntryFromDB.setEntryTime(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(foodLogEntryModel.getEntryTime()));
+        foodLogEntryFromDB.setPortion(foodLogEntryModel.getPortion());
         foodLogEntryFromDB.setUpdated(new Date());
         foodLogEntryRepository.save(foodLogEntryFromDB);
         return "food log entry updated";
