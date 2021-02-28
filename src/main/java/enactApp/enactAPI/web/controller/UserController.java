@@ -3,7 +3,9 @@ package enactApp.enactAPI.web.controller;
 import enactApp.enactAPI.data.model.*;
 import enactApp.enactAPI.data.repository.*;
 import enactApp.enactAPI.data.translator.FoodLogEntryTranslator;
+import enactApp.enactAPI.data.translator.UserTranslator;
 import enactApp.enactAPI.web.models.FoodLogEntryView;
+import enactApp.enactAPI.web.models.UserView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -188,6 +190,17 @@ public class UserController {
 
 
         return "form saved";
+    }
+
+
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+    @GetMapping(value = "api/users/{userId}/get")
+    public UserView getUserInfo(@PathVariable String userId){
+        Optional<User> optionalUser = userRepository.findUserById(Long.parseLong(userId));
+        if (optionalUser.isPresent()) {
+            return UserTranslator.entityToView(optionalUser.get());
+        }
+        return null;
     }
 
 

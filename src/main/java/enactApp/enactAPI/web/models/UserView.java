@@ -2,6 +2,9 @@ package enactApp.enactAPI.web.models;
 
 import lombok.*;
 
+import javax.persistence.Column;
+import java.util.Date;
+
 @Builder
 @Getter
 @Setter
@@ -11,9 +14,77 @@ import lombok.*;
 @ToString
 public class UserView {
 
+    private String email;
+
+    private String username;
+
     private String firstName;
 
-    private int avatarId;
+    private String lastName;
 
+    private Long avatarId;
+
+
+
+    private Date dateOfBirth;
+    private String race;
+
+    private String ethnicity;
+
+    private String gender;
+
+
+
+    private Long height;
+
+    private Long weight;
+
+    private String activityLevel;
+
+
+
+
+    private Boolean abdominalPain;
+
+
+    private Boolean appetiteLoss;
+
+    private Boolean bloating;
+
+    private Boolean constipation;
+
+    private Boolean diarrhea;
+
+    private Boolean nausea;
+
+    private Boolean stomaProblems;
+
+
+
+
+    private Boolean colorectal;
+
+    private Long stage;
+
+
+    private Date diagnosisDate;
+
+
+    private Boolean surgery;
+
+
+    private Boolean chemo;
+
+
+    private Boolean radiation;
+
+    private Boolean other;
+
+    private Boolean uncertain;
+
+    private Boolean ostomy;
+
+
+    private Boolean screenerCompleted;
 
 }
