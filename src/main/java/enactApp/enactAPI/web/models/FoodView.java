@@ -57,5 +57,7 @@ public class FoodView {
 
     private String commonPortionSizeUnit;
 
+    private String nccFoodGroupCategory;
+
 
 }

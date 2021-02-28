@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface NccFoodGroupCategoryRepository extends JpaRepository<NccFoodGroupCategory, Long> {
 
     Optional<NccFoodGroupCategory> findNccFoodGroupCategoryByCategory(String category);
+    Optional<NccFoodGroupCategory> findNccFoodGroupCategoryById(Long id);
 
 
 
