@@ -19,6 +19,8 @@ public class FoodView {
 
     private String description;
 
+    private String keyList;
+
     private Double kcal;
 
     private Double proteinInGrams;

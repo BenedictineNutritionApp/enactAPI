@@ -138,7 +138,11 @@ public class UserController {
         }
         System.out.println(formModel.toString());
         User userFromDB = optionalUser.get();
-        Date dateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse(formModel.getBirthDate());
+        String year = formModel.getBirthDate().split("-")[2];
+        String month = formModel.getBirthDate().split("-")[0];
+        String day = formModel.getBirthDate().split("-")[1];
+        String fullDob = year + "-" + month + "-" + day;
+        Date dateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse(fullDob);
         userFromDB.setDateOfBirth(dateOfBirth);
         userFromDB.setRace(formModel.getRace());
         userFromDB.setEthnicity(formModel.getEthnicity());
@@ -177,7 +181,11 @@ public class UserController {
         userFromDB.setColorectal(formModel.getColorectalCancer());
         if (!formModel.getColorectalCancer()) {
             userFromDB.setStage((long) -1);
-            Date lastDiagDate = new SimpleDateFormat("yyyy-MM-dd").parse("0000-00-00");
+            year = "0000";
+            month = "00";
+            day = "00";
+            String fullDiagDate = year + "-" + month + "-" + day;
+            Date lastDiagDate = new SimpleDateFormat("yyyy-MM-dd").parse(fullDiagDate);
             userFromDB.setDiagnosisDate(lastDiagDate);
         } else {
             userFromDB.setStage(Long.parseLong(formModel.getColorectalStage().split(" ")[1]));
@@ -217,6 +225,44 @@ public class UserController {
         System.out.println("DONE");
 
 
+        return "form saved";
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+    @PostMapping(value = "api/users/form/update/")
+    public String updateFormInfo(@Valid @RequestBody FormModel formModel) throws ParseException {
+        Optional<User> optionalUser = userRepository.findUserById(formModel.getUserId());
+        if (optionalUser.isEmpty()) {
+            return "user not found";
+        }
+        System.out.println(formModel.toString());
+        User userFromDB = optionalUser.get();
+        String temp = formModel.getBirthDate().split("T")[0];
+        String year = temp.split("-")[0];
+        String month = temp.split("-")[1];
+        String day = temp.split("-")[2];
+        String fullDob = year + "-" + month + "-" + day;
+        Date dateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse(fullDob);
+        userFromDB.setDateOfBirth(dateOfBirth);
+        userFromDB.setRace(formModel.getRace());
+        userFromDB.setEthnicity(formModel.getEthnicity());
+        userFromDB.setGender(formModel.getGender());
+        userFromDB.setHeight(formModel.getHeight());
+        userFromDB.setWeight(formModel.getWeight());
+        Optional<ActivityLevel> activityLevelFromDB = activityLevelRepository.findActivityLevelByLevel(formModel.getActivityLevel());
+        if (activityLevelFromDB.isEmpty()) {
+            ActivityLevel newActivityLevel = new ActivityLevel();
+            newActivityLevel.setLevel(formModel.getActivityLevel());
+            newActivityLevel.setCreated(new Date());
+            newActivityLevel.setUpdated(new Date());
+            activityLevelRepository.save(newActivityLevel);
+        }
+        activityLevelFromDB = activityLevelRepository.findActivityLevelByLevel(formModel.getActivityLevel());
+        Long activityLevelId = activityLevelFromDB.get().getId();
+        userFromDB.setActivityLevelId(activityLevelId);
+        userFromDB.setUpdated(new Date());
+        userRepository.save(userFromDB);
+        System.out.println("DONE UPDATING");
         return "form saved";
     }
 
