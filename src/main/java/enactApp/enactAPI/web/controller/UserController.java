@@ -3,7 +3,9 @@ package enactApp.enactAPI.web.controller;
 import enactApp.enactAPI.data.model.*;
 import enactApp.enactAPI.data.repository.*;
 import enactApp.enactAPI.data.translator.FoodLogEntryTranslator;
+import enactApp.enactAPI.data.translator.UserTranslator;
 import enactApp.enactAPI.web.models.FoodLogEntryView;
+import enactApp.enactAPI.web.models.UserView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -118,6 +120,14 @@ public class UserController {
         return "false";
     }
 
+    @Transactional
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+    @DeleteMapping(value = "api/users/{id}/delete/issues")
+    public void deleteUserGiIssues(@PathVariable Long id) {
+        userHasFrequentGiIssueRepository.deleteAllByUserId(id);
+
+    }
+
 
     @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
     @PostMapping(value = "api/users/form/save/")
@@ -175,17 +185,31 @@ public class UserController {
             userFromDB.setDiagnosisDate(lastDiagDate);
         }
 
-        CancerTreatment cancerTreatment = CancerTreatment.builder()
-                .surgery(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[0]))
-                .chemoTherapy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[1]))
-                .radiationTherapy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[2]))
-                .other(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[3]))
-                .uncertain(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[4]))
-                .ostomy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[5]))
-                .userId(formModel.getUserId())
-                .created(new Date())
-                .updated(new Date())
-                .build();
+        CancerTreatment cancerTreatment;
+        Optional<CancerTreatment> optionalCancerTreatment = cancerTreatmentRepository.findCancerTreatmentByUserId(userFromDB.getId());
+        if(optionalCancerTreatment.isEmpty()) {
+            cancerTreatment = CancerTreatment.builder()
+                    .surgery(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[0]))
+                    .chemoTherapy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[1]))
+                    .radiationTherapy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[2]))
+                    .other(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[3]))
+                    .uncertain(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[4]))
+                    .ostomy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[5]))
+                    .userId(formModel.getUserId())
+                    .created(new Date())
+                    .updated(new Date())
+                    .build();
+
+        } else {
+            cancerTreatment = optionalCancerTreatment.get();
+            cancerTreatment.setSurgery(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[0]));
+            cancerTreatment.setChemoTherapy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[1]));
+            cancerTreatment.setRadiationTherapy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[2]));
+            cancerTreatment.setOther(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[3]));
+            cancerTreatment.setUncertain(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[4]));
+            cancerTreatment.setOstomy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[5]));
+            cancerTreatment.setUpdated(new Date());
+        }
         cancerTreatmentRepository.save(cancerTreatment);
 
         userFromDB.setScreenerCompleted(true);
@@ -194,6 +218,17 @@ public class UserController {
 
 
         return "form saved";
+    }
+
+
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+    @GetMapping(value = "api/users/{userId}/get")
+    public UserView getUserInfo(@PathVariable String userId){
+        Optional<User> optionalUser = userRepository.findUserById(Long.parseLong(userId));
+        if (optionalUser.isPresent()) {
+            return UserTranslator.entityToView(optionalUser.get());
+        }
+        return null;
     }
 
 
