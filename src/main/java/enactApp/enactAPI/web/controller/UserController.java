@@ -165,10 +165,15 @@ public class UserController {
             userHasFrequentGiIssueRepository.save(userHasFrequentGiIssues);
         }
         userFromDB.setColorectal(formModel.getColorectalCancer());
-        userFromDB.setStage(Long.parseLong(formModel.getColorectalStage().split(" ")[1]));
-        Date lastDiagDate = new SimpleDateFormat("yyyy-MM-dd").parse(formModel.getLastDiagDate());
-        userFromDB.setDiagnosisDate(lastDiagDate);
-        userFromDB.setScreenerCompleted(true);
+        if (!formModel.getColorectalCancer()) {
+            userFromDB.setStage((long) -1);
+            Date lastDiagDate = new SimpleDateFormat("yyyy-MM-dd").parse("0000-00-00");
+            userFromDB.setDiagnosisDate(lastDiagDate);
+        } else {
+            userFromDB.setStage(Long.parseLong(formModel.getColorectalStage().split(" ")[1]));
+            Date lastDiagDate = new SimpleDateFormat("yyyy-MM-dd").parse(formModel.getLastDiagDate());
+            userFromDB.setDiagnosisDate(lastDiagDate);
+        }
 
         CancerTreatment cancerTreatment = CancerTreatment.builder()
                 .surgery(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[0]))
@@ -183,6 +188,7 @@ public class UserController {
                 .build();
         cancerTreatmentRepository.save(cancerTreatment);
 
+        userFromDB.setScreenerCompleted(true);
         userRepository.save(userFromDB);
         System.out.println("DONE");
 
