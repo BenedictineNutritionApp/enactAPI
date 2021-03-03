@@ -3,7 +3,9 @@ package enactApp.enactAPI.web.controller;
 import enactApp.enactAPI.data.model.*;
 import enactApp.enactAPI.data.repository.*;
 import enactApp.enactAPI.data.translator.FoodLogEntryTranslator;
+import enactApp.enactAPI.data.translator.UserTranslator;
 import enactApp.enactAPI.web.models.FoodLogEntryView;
+import enactApp.enactAPI.web.models.UserView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -118,6 +120,14 @@ public class UserController {
         return "false";
     }
 
+    @Transactional
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+    @DeleteMapping(value = "api/users/{id}/delete/issues")
+    public void deleteUserGiIssues(@PathVariable Long id) {
+        userHasFrequentGiIssueRepository.deleteAllByUserId(id);
+
+    }
+
 
     @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
     @PostMapping(value = "api/users/form/save/")
@@ -128,7 +138,11 @@ public class UserController {
         }
         System.out.println(formModel.toString());
         User userFromDB = optionalUser.get();
-        Date dateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse(formModel.getBirthDate());
+        String year = formModel.getBirthDate().split("-")[2];
+        String month = formModel.getBirthDate().split("-")[0];
+        String day = formModel.getBirthDate().split("-")[1];
+        String fullDob = year + "-" + month + "-" + day;
+        Date dateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse(fullDob);
         userFromDB.setDateOfBirth(dateOfBirth);
         userFromDB.setRace(formModel.getRace());
         userFromDB.setEthnicity(formModel.getEthnicity());
@@ -165,29 +179,102 @@ public class UserController {
             userHasFrequentGiIssueRepository.save(userHasFrequentGiIssues);
         }
         userFromDB.setColorectal(formModel.getColorectalCancer());
-        userFromDB.setStage(Long.parseLong(formModel.getColorectalStage().split(" ")[1]));
-        Date lastDiagDate = new SimpleDateFormat("yyyy-MM-dd").parse(formModel.getLastDiagDate());
-        userFromDB.setDiagnosisDate(lastDiagDate);
-        userFromDB.setScreenerCompleted(true);
+        if (!formModel.getColorectalCancer()) {
+            userFromDB.setStage((long) -1);
+            year = "0000";
+            month = "00";
+            day = "00";
+            String fullDiagDate = year + "-" + month + "-" + day;
+            Date lastDiagDate = new SimpleDateFormat("yyyy-MM-dd").parse(fullDiagDate);
+            userFromDB.setDiagnosisDate(lastDiagDate);
+        } else {
+            userFromDB.setStage(Long.parseLong(formModel.getColorectalStage().split(" ")[1]));
+            Date lastDiagDate = new SimpleDateFormat("yyyy-MM-dd").parse(formModel.getLastDiagDate());
+            userFromDB.setDiagnosisDate(lastDiagDate);
+        }
 
-        CancerTreatment cancerTreatment = CancerTreatment.builder()
-                .surgery(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[0]))
-                .chemoTherapy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[1]))
-                .radiationTherapy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[2]))
-                .other(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[3]))
-                .uncertain(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[4]))
-                .ostomy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[5]))
-                .userId(formModel.getUserId())
-                .created(new Date())
-                .updated(new Date())
-                .build();
+        CancerTreatment cancerTreatment;
+        Optional<CancerTreatment> optionalCancerTreatment = cancerTreatmentRepository.findCancerTreatmentByUserId(userFromDB.getId());
+        if(optionalCancerTreatment.isEmpty()) {
+            cancerTreatment = CancerTreatment.builder()
+                    .surgery(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[0]))
+                    .chemoTherapy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[1]))
+                    .radiationTherapy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[2]))
+                    .other(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[3]))
+                    .uncertain(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[4]))
+                    .ostomy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[5]))
+                    .userId(formModel.getUserId())
+                    .created(new Date())
+                    .updated(new Date())
+                    .build();
+
+        } else {
+            cancerTreatment = optionalCancerTreatment.get();
+            cancerTreatment.setSurgery(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[0]));
+            cancerTreatment.setChemoTherapy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[1]));
+            cancerTreatment.setRadiationTherapy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[2]));
+            cancerTreatment.setOther(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[3]));
+            cancerTreatment.setUncertain(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[4]));
+            cancerTreatment.setOstomy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[5]));
+            cancerTreatment.setUpdated(new Date());
+        }
         cancerTreatmentRepository.save(cancerTreatment);
 
+        userFromDB.setScreenerCompleted(true);
         userRepository.save(userFromDB);
         System.out.println("DONE");
 
 
         return "form saved";
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+    @PostMapping(value = "api/users/form/update/")
+    public String updateFormInfo(@Valid @RequestBody FormModel formModel) throws ParseException {
+        Optional<User> optionalUser = userRepository.findUserById(formModel.getUserId());
+        if (optionalUser.isEmpty()) {
+            return "user not found";
+        }
+        System.out.println(formModel.toString());
+        User userFromDB = optionalUser.get();
+        String temp = formModel.getBirthDate().split("T")[0];
+        String year = temp.split("-")[0];
+        String month = temp.split("-")[1];
+        String day = temp.split("-")[2];
+        String fullDob = year + "-" + month + "-" + day;
+        Date dateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse(fullDob);
+        userFromDB.setDateOfBirth(dateOfBirth);
+        userFromDB.setRace(formModel.getRace());
+        userFromDB.setEthnicity(formModel.getEthnicity());
+        userFromDB.setGender(formModel.getGender());
+        userFromDB.setHeight(formModel.getHeight());
+        userFromDB.setWeight(formModel.getWeight());
+        Optional<ActivityLevel> activityLevelFromDB = activityLevelRepository.findActivityLevelByLevel(formModel.getActivityLevel());
+        if (activityLevelFromDB.isEmpty()) {
+            ActivityLevel newActivityLevel = new ActivityLevel();
+            newActivityLevel.setLevel(formModel.getActivityLevel());
+            newActivityLevel.setCreated(new Date());
+            newActivityLevel.setUpdated(new Date());
+            activityLevelRepository.save(newActivityLevel);
+        }
+        activityLevelFromDB = activityLevelRepository.findActivityLevelByLevel(formModel.getActivityLevel());
+        Long activityLevelId = activityLevelFromDB.get().getId();
+        userFromDB.setActivityLevelId(activityLevelId);
+        userFromDB.setUpdated(new Date());
+        userRepository.save(userFromDB);
+        System.out.println("DONE UPDATING");
+        return "form saved";
+    }
+
+
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+    @GetMapping(value = "api/users/{userId}/get")
+    public UserView getUserInfo(@PathVariable String userId){
+        Optional<User> optionalUser = userRepository.findUserById(Long.parseLong(userId));
+        if (optionalUser.isPresent()) {
+            return UserTranslator.entityToView(optionalUser.get());
+        }
+        return null;
     }
 
 

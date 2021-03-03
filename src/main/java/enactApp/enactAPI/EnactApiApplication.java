@@ -328,17 +328,17 @@ public class EnactApiApplication {
 
             // Check if the category is already in the database
             // If it isn't, it is added to the database
-            Optional<NccFoodGroupCategory> optionalNccFoodGroupCategory = nccFoodGroupCategoryRepository.findNccFoodGroupCategoryByCategory(nccFoodGroupCategory);
+            Optional<NccFoodGroupCategory> optionalNccFoodGroupCategory = nccFoodGroupCategoryRepository.findNccFoodGroupCategoryByCategory(nccFoodGroupCategory.replaceAll("\"", ""));
             if (optionalNccFoodGroupCategory.isEmpty()) {
                 NccFoodGroupCategory newNccFoodGroupCategory = NccFoodGroupCategory.builder()
-                        .category(nccFoodGroupCategory)
+                        .category(nccFoodGroupCategory.replaceAll("\"", ""))
                         .created(new Date())
                         .updated(new Date())
                         .build();
                 nccFoodGroupCategoryRepository.save(newNccFoodGroupCategory);
             }
             // Get the id for a given category
-            optionalNccFoodGroupCategory = nccFoodGroupCategoryRepository.findNccFoodGroupCategoryByCategory(nccFoodGroupCategory);
+            optionalNccFoodGroupCategory = nccFoodGroupCategoryRepository.findNccFoodGroupCategoryByCategory(nccFoodGroupCategory.replaceAll("\"", ""));
             NccFoodGroupCategory storedNccFoodGroupCategory = optionalNccFoodGroupCategory.get();
             nccFoodGroupCategoryId = storedNccFoodGroupCategory.getId();
 

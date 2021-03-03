@@ -14,6 +14,7 @@ public class FoodTranslator {
                 .id(food.getId())
                 .baseId(food.getBaseId())
                 .description(food.getDescription())
+                .keyList(food.getKeylist())
                 .kcal(food.getKcal())
                 .proteinInGrams(food.getProteinInGrams())
                 .fatInGrams(food.getFatInGrams())
@@ -32,6 +33,7 @@ public class FoodTranslator {
                 .commonPortionSizeGramWeight(food.getCommonPortionSizeGramWeight())
                 .commonPortionSizeDescription(FoodService.getCommonPortionSizeDescription(food.getCommonPortionSizeDescriptionId()))
                 .commonPortionSizeUnit(FoodService.getCommonPortionSizeUnit(food.getCommonPortionSizeUnitId()))
+                .nccFoodGroupCategory(FoodService.getNccFoodGroupCategory(food.getNccFoodGroupCategoryId()))
                 .build();
     }
 
@@ -43,6 +45,7 @@ public class FoodTranslator {
                             .id(food.getId())
                             .baseId(food.getBaseId())
                             .description(food.getDescription())
+                            .keyList(food.getKeylist())
                             .kcal(food.getKcal())
                             .proteinInGrams(food.getProteinInGrams())
                             .fatInGrams(food.getFatInGrams())
@@ -61,6 +64,7 @@ public class FoodTranslator {
                             .commonPortionSizeGramWeight(food.getCommonPortionSizeGramWeight())
                             .commonPortionSizeDescription(FoodService.getCommonPortionSizeDescription(food.getCommonPortionSizeDescriptionId()))
                             .commonPortionSizeUnit(FoodService.getCommonPortionSizeUnit(food.getCommonPortionSizeUnitId()))
+                            .nccFoodGroupCategory(FoodService.getNccFoodGroupCategory(food.getNccFoodGroupCategoryId()))
                             .build()
             );
         }
