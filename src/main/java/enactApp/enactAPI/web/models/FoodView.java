@@ -19,6 +19,8 @@ public class FoodView {
 
     private String description;
 
+    private String keyList;
+
     private Double kcal;
 
     private Double proteinInGrams;
@@ -56,6 +58,8 @@ public class FoodView {
     private String commonPortionSizeDescription;
 
     private String commonPortionSizeUnit;
+
+    private String nccFoodGroupCategory;
 
 
 }
