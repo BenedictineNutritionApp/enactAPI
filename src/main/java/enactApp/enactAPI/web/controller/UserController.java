@@ -75,7 +75,9 @@ public class UserController {
         user.setUpdated(new Date());
         user.setScreenerCompleted(false);
         userRepository.save(user);
-        return "Registered";
+        Optional<User> savedNewUser = userRepository.findUserByEmail(user.getEmail());
+        savedNewUser.ifPresent(user1 -> System.out.println(user.getId()));
+        return "R";
     }
 
 //    @PostMapping(path = "api/users/register/")

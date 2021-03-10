@@ -21,7 +21,6 @@ import java.util.Date;
 public class User extends AbstractEntity {
 //public class User extends AbstractEntity implements UserDetails, CredentialsContainer {
 
-
     @Column(name = "email")
     private String email;
 
