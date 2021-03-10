@@ -1,17 +1,11 @@
 package enactApp.enactAPI.web.controller;
 
-import enactApp.enactAPI.data.model.FitnessActivity;
-import enactApp.enactAPI.data.model.Food;
 import enactApp.enactAPI.data.model.Symptom;
-import enactApp.enactAPI.data.model.User;
-import enactApp.enactAPI.data.repository.FitnessActivityRepository;
 import enactApp.enactAPI.data.repository.SymptomRepository;
-import enactApp.enactAPI.data.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +18,7 @@ public class SymptomController {
     public SymptomController(SymptomRepository symptomRepository) {
         this.symptomRepository = symptomRepository;
     }
+
     @GetMapping(value = "/api/symptom/all")
     public List<Symptom> getAllSymptom() {
         List<Symptom> symptomList = symptomRepository.findAll();
@@ -42,12 +37,22 @@ public class SymptomController {
         newSymptom.setStomaProblems(symptom.isStomaProblems());
         newSymptom.setVomiting(symptom.isVomiting());
         newSymptom.setOther(symptom.getOther());
+        newSymptom.setId(symptom.getId());
         newSymptom.setDateTime(symptom.getDateTime());
         newSymptom.setUpdated(new Date());
         newSymptom.setCreated(new Date());
         symptomRepository.save(newSymptom);
-        System.out.println(symptom.getOther());
         return true;
     }
+
+    @PutMapping(path = "/api/symptom/update")
+    public boolean updateSymptom(@RequestBody Symptom symptom){
+        Symptom oldSymptom = symptomRepository.getOne(symptom.getId());
+        symptom.setUpdated(new Date());
+        symptom.setCreated(oldSymptom.getCreated());
+        symptomRepository.save(symptom);
+        return true;
+    }
+
 
 }
