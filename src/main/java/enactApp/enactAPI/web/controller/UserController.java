@@ -3,18 +3,20 @@ package enactApp.enactAPI.web.controller;
 import enactApp.enactAPI.data.model.*;
 import enactApp.enactAPI.data.repository.*;
 import enactApp.enactAPI.data.translator.FoodLogEntryTranslator;
+import enactApp.enactAPI.data.translator.FoodTranslator;
 import enactApp.enactAPI.data.translator.UserTranslator;
 import enactApp.enactAPI.web.models.FoodLogEntryView;
+import enactApp.enactAPI.web.models.FoodView;
 import enactApp.enactAPI.web.models.UserView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +31,7 @@ public class UserController {
 
     @Autowired
     private final UserRepository userRepository;
+    private final FoodRepository foodRepository;
     private final ActivityLevelRepository activityLevelRepository;
     private final FrequentGiIssueRepository frequentGiIssueRepository;
     private final UserHasFrequentGiIssuesRepository userHasFrequentGiIssueRepository;
@@ -36,8 +39,9 @@ public class UserController {
     private final CancerTreatmentRepository cancerTreatmentRepository;
 
 
-    public UserController(UserRepository userRepository, ActivityLevelRepository activityLevelRepository, FrequentGiIssueRepository frequentGiIssueRepository, UserHasFrequentGiIssuesRepository userHasFrequentGiIssueRepository, FoodLogEntryRepository foodLogEntryRepository, CancerTreatmentRepository cancerTreatmentRepository) {
+    public UserController(UserRepository userRepository, FoodRepository foodRepository, ActivityLevelRepository activityLevelRepository, FrequentGiIssueRepository frequentGiIssueRepository, UserHasFrequentGiIssuesRepository userHasFrequentGiIssueRepository, FoodLogEntryRepository foodLogEntryRepository, CancerTreatmentRepository cancerTreatmentRepository) {
         this.userRepository = userRepository;
+        this.foodRepository = foodRepository;
         this.activityLevelRepository = activityLevelRepository;
         this.frequentGiIssueRepository = frequentGiIssueRepository;
         this.userHasFrequentGiIssueRepository = userHasFrequentGiIssueRepository;
@@ -286,6 +290,21 @@ public class UserController {
         Date parsedDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
         List<FoodLogEntry> foodLogEntryList = foodLogEntryRepository.findFoodLogEntryByUserIdAndDateOrderByEntryTime(Long.parseLong(userId), parsedDate);
         return FoodLogEntryTranslator.entitiesToViews(foodLogEntryList);
+
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+    @GetMapping(value = "api/users/{userId}/foodlog/frequent")
+    public List<FoodView> getFrequentFoods(@PathVariable String userId)  {
+        ArrayList<FoodView> frequentFoods = new ArrayList<>();
+        List<FoodLogEntry> foodLogEntryList = foodLogEntryRepository.findFrequentFoods(Long.parseLong(userId));
+        for(FoodLogEntry foodLogEntry: foodLogEntryList) {
+            Optional<Food> optionalFood = foodRepository.findFoodById(foodLogEntry.getFoodId());
+            if(optionalFood.isPresent()) {
+                frequentFoods.add(FoodTranslator.entityToView(optionalFood.get()));
+            }
+        }
+        return frequentFoods;
 
     }
 
