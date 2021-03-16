@@ -14,10 +14,15 @@ import java.time.LocalDateTime;
 @ToString
 @Entity
 @Table(name = "metric")
-public class Metric extends AbstractEntity{
+public class Metric extends AbstractEntity implements Comparable<Metric>{
     @Column(name = "weight")
     private int weight;
 
     @Column(name = "date_time")
     private LocalDateTime dateTime;
+
+    @Override
+    public int compareTo(Metric o) {
+        return o.getDateTime().compareTo(getDateTime());
+    }
 }

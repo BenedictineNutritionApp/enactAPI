@@ -1,10 +1,7 @@
 package enactApp.enactAPI.web.controller;
 
 import enactApp.enactAPI.data.model.FitnessActivity;
-import enactApp.enactAPI.data.model.Food;
-import enactApp.enactAPI.data.model.User;
 import enactApp.enactAPI.data.repository.FitnessActivityRepository;
-import enactApp.enactAPI.data.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -54,5 +50,13 @@ public class FitnessActivityController {
         System.out.println(newFitnessActivity.getType());
         return true;
 
+    }
+    @PutMapping(path = "/api/fitnessActivity/update")
+    public boolean updateFitnessActivity(@RequestBody FitnessActivity fitnessActivity){
+        FitnessActivity oldFitnessActivity = fitnessActivityRepository.getOne(fitnessActivity.getId());
+        fitnessActivity.setUpdated(new Date());
+        fitnessActivity.setCreated(oldFitnessActivity.getCreated());
+        fitnessActivityRepository.save(fitnessActivity);
+        return true;
     }
 }

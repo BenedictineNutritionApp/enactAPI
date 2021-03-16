@@ -75,9 +75,14 @@ public class UserController {
         user.setUpdated(new Date());
         user.setScreenerCompleted(false);
         userRepository.save(user);
+
+        //Now that the user has been created and save, retrieve the user id and return it.
         Optional<User> savedNewUser = userRepository.findUserByEmail(user.getEmail());
-        savedNewUser.ifPresent(user1 -> System.out.println(user.getId()));
-        return "R";
+
+        if (savedNewUser.isPresent()){
+            return savedNewUser.get().getId().toString();
+        }
+        return null;
     }
 
 //    @PostMapping(path = "api/users/register/")
@@ -105,20 +110,24 @@ public class UserController {
             return "invalid";
         }
 
-        return "valid";
+        return user.getId().toString();
     }
 
     @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @GetMapping(value = "api/users/formstatus/{email}")
-    public String getFormCompletionStatus(@PathVariable String email) {
-        Optional<User> optionalUser = userRepository.findUserByEmail(email);
+    @GetMapping(value = "api/users/formstatus/{id}")
+    public String getFormCompletionStatus(@PathVariable String id) {
+        System.out.println("here");
+        Optional<User> optionalUser = userRepository.findUserById(Long.parseLong(id));
         if (optionalUser.isEmpty()) {
+            System.out.println('1');
             return "false";
         }
         User user = optionalUser.get();
         if (user.getScreenerCompleted()) {
+            System.out.println('2');
             return "true";
         }
+        System.out.println('3');
         return "false";
     }
 
