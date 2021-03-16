@@ -13,9 +13,9 @@ public class FoodLogEntryTranslator {
         return FoodLogEntryView.builder()
                 .id(foodLogEntry.getId())
                 .date(foodLogEntry.getDate())
-                .entryTime(foodLogEntry.getEntryTime())
+                .entryTime(foodLogEntry.getEntryTime().toString())
                 .portion(foodLogEntry.getPortion())
-                .food(FoodLogEntryService.getFood(foodLogEntry.getFoodId()))
+                .food(FoodTranslator.entityToView(FoodLogEntryService.getFood(foodLogEntry.getFoodId())))
                 .build();
     }
 
@@ -26,9 +26,9 @@ public class FoodLogEntryTranslator {
                     FoodLogEntryView.builder()
                             .id(foodLogEntry.getId())
                             .date(foodLogEntry.getDate())
-                            .entryTime(foodLogEntry.getEntryTime())
+                            .entryTime(foodLogEntry.getEntryTime().toString())
                             .portion(foodLogEntry.getPortion())
-                            .food(FoodLogEntryService.getFood(foodLogEntry.getFoodId()))
+                            .food(FoodTranslator.entityToView(FoodLogEntryService.getFood(foodLogEntry.getFoodId())))
                             .build()
             );
         }
