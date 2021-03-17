@@ -16,13 +16,13 @@ public class FoodLogEntryView {
 
     private Long id;
 
-    private Date entryTime;
+    private String entryTime;
 
     private Date date;
 
     private Double portion;
 
-    private Food food;
+    private FoodView food;
 
 
 

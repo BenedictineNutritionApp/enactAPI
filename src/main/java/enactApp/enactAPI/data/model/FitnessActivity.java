@@ -1,6 +1,5 @@
 package enactApp.enactAPI.data.model;
 
-
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.*;
@@ -20,7 +19,7 @@ import java.time.LocalDateTime;
 @ToString
 @Entity
 @Table(name = "fitness_activity")
-public class FitnessActivity extends AbstractEntity implements Comparable<FitnessActivity>{
+public class FitnessActivity extends AbstractEntity implements Comparable<FitnessActivity> {
 
     @Column(name = "type")
     private String type;
