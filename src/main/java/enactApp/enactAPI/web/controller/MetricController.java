@@ -24,6 +24,7 @@ public class MetricController {
     @GetMapping(value = "/api/metric/all")
     public List<Metric> getAllMetric() {
         List<Metric> metricList = metricRepository.findAll();
+        Collections.sort(metricList);
         return metricList;
     }
 
