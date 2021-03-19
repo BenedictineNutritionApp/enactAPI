@@ -15,7 +15,7 @@ public interface FoodLogEntryRepository extends JpaRepository<FoodLogEntry, Long
 
     List<FoodLogEntry> findFoodLogEntryByUserIdAndDateOrderByEntryTime(Long userId, Date date);
 
-    @Query(value = "SELECT *, COUNT(`food_id`) AS `value_occurrence` FROM `food_log_entry` WHERE `user_id` = ?1 GROUP BY `food_id` ORDER BY `value_occurrence` DESC LIMIT 5 ", nativeQuery = true)
+    @Query(value = "SELECT *, COUNT(`food_id`) AS `value_occurrence` FROM `food_log_entry` WHERE `user_id` = ?1 AND `date` BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() GROUP BY `food_id` ORDER BY `value_occurrence` DESC LIMIT 10 ", nativeQuery = true)
     List<FoodLogEntry> findFrequentFoods(Long userId);
 
     
