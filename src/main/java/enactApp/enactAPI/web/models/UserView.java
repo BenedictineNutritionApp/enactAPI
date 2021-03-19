@@ -2,7 +2,6 @@ package enactApp.enactAPI.web.models;
 
 import lombok.*;
 
-import javax.persistence.Column;
 import java.util.Date;
 
 @Builder
@@ -25,8 +24,8 @@ public class UserView {
     private Long avatarId;
 
 
-
     private Date dateOfBirth;
+
     private String race;
 
     private String ethnicity;
@@ -39,9 +38,13 @@ public class UserView {
 
     private Long weight;
 
+    private Long fatPercent;
+
+    private Long proteinPercent;
+
+    private Long carbohydratePercent;
+
     private String activityLevel;
-
-
 
 
     private Boolean abdominalPain;

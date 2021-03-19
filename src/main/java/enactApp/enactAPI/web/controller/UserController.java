@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -78,14 +79,37 @@ public class UserController {
         user.setCreated(new Date());
         user.setUpdated(new Date());
         user.setScreenerCompleted(false);
+        user.setFatPercent(15L);
+        user.setProteinPercent(15L);
+        user.setCarbohydratePercent(70L);
         userRepository.save(user);
 
         //Now that the user has been created and save, retrieve the user id and return it.
         Optional<User> savedNewUser = userRepository.findUserByEmail(user.getEmail());
 
-        if (savedNewUser.isPresent()){
+        if (savedNewUser.isPresent()) {
             return savedNewUser.get().getId().toString();
         }
+        return null;
+    }
+
+
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+    @PostMapping(value = "api/users/profile/ratios")
+    public String setUserNutrientRatios(@Valid @RequestBody NutrientRatioFormModel nutrientRatioFormModel) {
+        Optional<User> optionalUser = userRepository.findUserById(nutrientRatioFormModel.getUserId());
+        if (!optionalUser.isPresent()) {
+            return "User does not exist";
+        }
+        System.out.println(nutrientRatioFormModel.toString());
+        User user = optionalUser.get();
+        user.setFatPercent(nutrientRatioFormModel.getFatPercent());
+        user.setProteinPercent(nutrientRatioFormModel.getProteinPercent());
+        user.setCarbohydratePercent(nutrientRatioFormModel.getCarbohydratePercent());
+        user.setUpdated(new Date());
+        userRepository.save(user);
+
+
         return null;
     }
 
@@ -210,7 +234,7 @@ public class UserController {
 
         CancerTreatment cancerTreatment;
         Optional<CancerTreatment> optionalCancerTreatment = cancerTreatmentRepository.findCancerTreatmentByUserId(userFromDB.getId());
-        if(optionalCancerTreatment.isEmpty()) {
+        if (optionalCancerTreatment.isEmpty()) {
             cancerTreatment = CancerTreatment.builder()
                     .surgery(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[0]))
                     .chemoTherapy(Boolean.parseBoolean(formModel.getCancerTreatment().split(",")[1]))
@@ -284,7 +308,7 @@ public class UserController {
 
     @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
     @GetMapping(value = "api/users/{userId}/get")
-    public UserView getUserInfo(@PathVariable String userId){
+    public UserView getUserInfo(@PathVariable String userId) {
         Optional<User> optionalUser = userRepository.findUserById(Long.parseLong(userId));
         if (optionalUser.isPresent()) {
             return UserTranslator.entityToView(optionalUser.get());
@@ -304,12 +328,12 @@ public class UserController {
 
     @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
     @GetMapping(value = "api/users/{userId}/foodlog/frequent")
-    public List<FoodView> getFrequentFoods(@PathVariable String userId)  {
+    public List<FoodView> getFrequentFoods(@PathVariable String userId) {
         ArrayList<FoodView> frequentFoods = new ArrayList<>();
         List<FoodLogEntry> foodLogEntryList = foodLogEntryRepository.findFrequentFoods(Long.parseLong(userId));
-        for(FoodLogEntry foodLogEntry: foodLogEntryList) {
+        for (FoodLogEntry foodLogEntry : foodLogEntryList) {
             Optional<Food> optionalFood = foodRepository.findFoodById(foodLogEntry.getFoodId());
-            if(optionalFood.isPresent()) {
+            if (optionalFood.isPresent()) {
                 frequentFoods.add(FoodTranslator.entityToView(optionalFood.get()));
             }
         }
@@ -345,6 +369,25 @@ public class UserController {
         foodLogEntryFromDB.setUpdated(new Date());
         foodLogEntryRepository.save(foodLogEntryFromDB);
         return "food log entry updated";
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+    @PostMapping(value = "api/users/{userId}/update/weight/")
+    public String updateWeight(@Valid @PathVariable Long userId, @RequestBody Metric metric) {
+        Optional<User> optionalUser = userRepository.findUserById(userId);
+        if (optionalUser.isEmpty()) {
+            return "error updating";
+        }
+        User user = optionalUser.get();
+        Date date = Date.from(metric.getDateTime().atZone(ZoneId.systemDefault()).toInstant());
+
+        if(date.after(user.getUpdated())) {
+            user.setWeight((long) metric.getWeight());
+            user.setUpdated(new Date());
+            userRepository.save(user);
+        }
+
+        return "user weight updated via metric";
     }
 
     @Transactional
