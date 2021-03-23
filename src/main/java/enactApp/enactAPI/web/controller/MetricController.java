@@ -1,34 +1,39 @@
 package enactApp.enactAPI.web.controller;
+
 import enactApp.enactAPI.data.model.*;
-import enactApp.enactAPI.data.repository.FitnessActivityRepository;
-import enactApp.enactAPI.data.repository.MetricRepository;
-import enactApp.enactAPI.data.repository.SymptomRepository;
-import enactApp.enactAPI.data.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
+import enactApp.enactAPI.data.repository.*;
+import enactApp.enactAPI.data.translator.FoodTranslator;
+import enactApp.enactAPI.web.models.FoodView;
 import org.springframework.beans.factory.annotation.Autowired;
+import enactApp.enactAPI.data.model.ActivityOption;
+import enactApp.enactAPI.data.repository.ActivityOptionRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.*;
 
-@Slf4j
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/api/metric")
 public class MetricController {
-    @Autowired
-    private final MetricRepository metricRepository;
 
-    public MetricController(MetricRepository metricRepository){
-        this.metricRepository = metricRepository;
-    }
-    @GetMapping(value = "/api/metric/all")
+
+    @Autowired
+    private MetricRepository metricRepository;
+
+    @GetMapping(value = "/all")
     public List<Metric> getAllMetric() {
         List<Metric> metricList = metricRepository.findAll();
         Collections.sort(metricList);
         return metricList;
     }
 
-    @PostMapping(path = "/api/metric/add/")
+    @PostMapping(path = "/add/")
     public boolean saveMetric(@RequestBody Metric metric){
         Metric newMetric = new Metric();
         newMetric.setWeight(metric.getWeight());
@@ -38,4 +43,6 @@ public class MetricController {
         metricRepository.save(newMetric);
         return true;
     }
+
+
 }

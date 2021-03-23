@@ -1,33 +1,40 @@
 package enactApp.enactAPI.web.controller;
 
-import enactApp.enactAPI.data.model.Symptom;
-import enactApp.enactAPI.data.repository.SymptomRepository;
-import lombok.extern.slf4j.Slf4j;
+import enactApp.enactAPI.data.model.*;
+import enactApp.enactAPI.data.repository.*;
+import enactApp.enactAPI.data.translator.FoodTranslator;
+import enactApp.enactAPI.web.models.FoodView;
 import org.springframework.beans.factory.annotation.Autowired;
+import enactApp.enactAPI.data.model.ActivityOption;
+import enactApp.enactAPI.data.repository.ActivityOptionRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.*;
 
-@Slf4j
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/api/symptom")
 public class SymptomController {
+
+
     @Autowired
-    private final SymptomRepository symptomRepository;
+    private SymptomRepository symptomRepository;
 
-    public SymptomController(SymptomRepository symptomRepository) {
-        this.symptomRepository = symptomRepository;
-    }
 
-    @GetMapping(value = "/api/symptom/all")
+    @GetMapping(value = "/all")
     public List<Symptom> getAllSymptom() {
         List<Symptom> symptomList = symptomRepository.findAll();
         Collections.sort(symptomList);
         return symptomList;
     }
 
-    @PostMapping(path = "/api/symptom/add/")
+    @PostMapping(path = "/add/")
     public boolean saveSymptom(@RequestBody Symptom symptom){
         Symptom newSymptom = new Symptom();
         newSymptom.setAbdominalPain(symptom.isAbdominalPain());
@@ -47,7 +54,7 @@ public class SymptomController {
         return true;
     }
 
-    @PutMapping(path = "/api/symptom/update")
+    @PutMapping(path = "/update")
     public boolean updateSymptom(@RequestBody Symptom symptom){
         Symptom oldSymptom = symptomRepository.getOne(symptom.getId());
         symptom.setUpdated(new Date());

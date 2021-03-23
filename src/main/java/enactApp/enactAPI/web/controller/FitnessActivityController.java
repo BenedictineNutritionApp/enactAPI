@@ -1,28 +1,31 @@
 package enactApp.enactAPI.web.controller;
 
-import enactApp.enactAPI.data.model.FitnessActivity;
-import enactApp.enactAPI.data.repository.FitnessActivityRepository;
-import lombok.extern.slf4j.Slf4j;
+import enactApp.enactAPI.data.model.*;
+import enactApp.enactAPI.data.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import enactApp.enactAPI.data.model.ActivityOption;
+import enactApp.enactAPI.data.repository.ActivityOptionRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.*;
 
-@Slf4j
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/api/fitnessActivity")
 public class FitnessActivityController {
 
     @Autowired
-    private final FitnessActivityRepository fitnessActivityRepository;
-
-    public FitnessActivityController(FitnessActivityRepository fitnessActivityRepository) {
-        this.fitnessActivityRepository = fitnessActivityRepository;
-    }
+    private FitnessActivityRepository fitnessActivityRepository;
 
 
-    @GetMapping(value = "/api/fitnessActivity/all")
+
+    @GetMapping(value = "/all")
     public List<FitnessActivity> getAllFitnessActivity() {
         List<FitnessActivity> fitnessActivityList = fitnessActivityRepository.findAll();
         Collections.sort(fitnessActivityList);
@@ -37,7 +40,7 @@ public class FitnessActivityController {
 //        return "added";
 //    }
 
-    @PostMapping(path = "/api/fitnessActivity/add/")
+    @PostMapping(path = "/add/")
     public boolean saveFitnessActivity(@RequestBody FitnessActivity fitnessActivity) {
         FitnessActivity newFitnessActivity = new FitnessActivity();
         newFitnessActivity.setIntensity(fitnessActivity.getIntensity());
@@ -51,7 +54,7 @@ public class FitnessActivityController {
         return true;
 
     }
-    @PutMapping(path = "/api/fitnessActivity/update")
+    @PutMapping(path = "/update")
     public boolean updateFitnessActivity(@RequestBody FitnessActivity fitnessActivity){
         FitnessActivity oldFitnessActivity = fitnessActivityRepository.getOne(fitnessActivity.getId());
         fitnessActivity.setUpdated(new Date());
@@ -59,4 +62,5 @@ public class FitnessActivityController {
         fitnessActivityRepository.save(fitnessActivity);
         return true;
     }
+
 }

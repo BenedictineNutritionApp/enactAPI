@@ -2,111 +2,44 @@ package enactApp.enactAPI.web.controller;
 
 import enactApp.enactAPI.data.model.*;
 import enactApp.enactAPI.data.repository.*;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import enactApp.enactAPI.data.model.ActivityOption;
+import enactApp.enactAPI.data.repository.ActivityOptionRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
-
-/**
- * This is the AdministratorController class
- */
-@Slf4j
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/api/administrators")
 public class AdministratorController {
 
+
     @Autowired
-    private final AdministratorRepository administratorRepository;
+    private FoodRepository foodRepository;
     @Autowired
-    final FoodRepository foodRepository;
+    private NccFoodGroupCategoryRepository nccFoodGroupCategoryRepository;
     @Autowired
-    final NccFoodGroupCategoryRepository nccFoodGroupCategoryRepository;
+    private CommonPortionSizeDescriptionRepository commonPortionSizeDescriptionRepository;
     @Autowired
-    final CommonPortionSizeDescriptionRepository commonPortionSizeDescriptionRepository;
-    @Autowired
-    final CommonPortionSizeUnitRepository commonPortionSizeUnitRepository;
+    private CommonPortionSizeUnitRepository commonPortionSizeUnitRepository;
 
-
-    public AdministratorController(AdministratorRepository administratorRepository, FoodRepository foodRepository, NccFoodGroupCategoryRepository nccFoodGroupCategoryRepository, CommonPortionSizeDescriptionRepository commonPortionSizeDescriptionRepository, CommonPortionSizeUnitRepository commonPortionSizeUnitRepository) {
-        this.administratorRepository = administratorRepository;
-        this.foodRepository = foodRepository;
-        this.nccFoodGroupCategoryRepository = nccFoodGroupCategoryRepository;
-        this.commonPortionSizeDescriptionRepository = commonPortionSizeDescriptionRepository;
-        this.commonPortionSizeUnitRepository = commonPortionSizeUnitRepository;
-    }
-
-
-    @CrossOrigin(origins = "http://localhost:4200/", allowedHeaders = "*")
-    @GetMapping(value = "api/administrators/checkIfEmailExists/{email}")
-    public boolean checkIfEmailExists(@PathVariable String email) {
-        Optional<Administrator> optionalAdministrator = administratorRepository.findAdministratorByEmail(email);
-        return optionalAdministrator.isPresent();
-    }
-
-    /**
-     * This method creates the user by setting the user details and saving them to the database, returning error messages or success message when applicable.
-     *
-     * @param administrator The administrator
-     * @return The string containing the error type or successful registration pop up
-     */
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @PostMapping(value = "api/administrators/register")
-    public String createAdministrator(@Valid @RequestBody Administrator administrator) {
-        //Checks if the entered email is already in use
-        Optional<Administrator> optionalAdministrator = administratorRepository.findAdministratorByEmail(administrator.getEmail());
-        if (optionalAdministrator.isPresent()) {
-            return "email already taken";
-        }
-        //Sets the user's details and saves them to the database
-//        user.setPassword(encode(user.getPassword()));
-        Administrator newAdministrator = Administrator.builder()
-                .firstName(administrator.getFirstName())
-                .lastName(administrator.getLastName())
-                .email(administrator.getEmail())
-                .level(administrator.getLevel())
-                .created(new Date())
-                .updated(new Date())
-                .build();
-        administratorRepository.save(newAdministrator);
-
-
-        optionalAdministrator = administratorRepository.findAdministratorByEmail(administrator.getEmail());
-
-        if (optionalAdministrator.isPresent()) {
-            return optionalAdministrator.get().getId().toString();
-        }
-        return null;
-    }
-
-
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @GetMapping(value = "api/administrators/login/")
-    public String login(@RequestBody Administrator administrator) {
-        // If the user does not exist currently
-        Optional<Administrator> optionalAdministrator = administratorRepository.findAdministratorByEmail(administrator.getEmail());
-        if (optionalAdministrator.isEmpty()) {
-            return "invalid email";
-        }
-        //Checks that the entered information is correct against that user's stored information
-        //If it is incorrect
-        if (!administrator.getPassword().equals(optionalAdministrator.get().getPassword())) {
-            return "invalid password";
-        }
-
-        return administrator.getId().toString();
-    }
 
     /**
      * This method parses a csv file and saves food information to the database.
      */
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @PostMapping(value = "api/administrators/upload/")
+    @PostMapping(value = "/upload/")
     public String insertData(@RequestParam("file") MultipartFile file) throws IOException {
         // Check if file is csv
         if (file.getContentType() != "txt/csv") {
@@ -493,6 +426,5 @@ public class AdministratorController {
             return "error";
         }
     }
-
 
 }
