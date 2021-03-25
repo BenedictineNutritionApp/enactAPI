@@ -4,10 +4,10 @@ spring:
     name: BenedictineHealthApp
   datasource:
     initialization-mode: NEVER
-    url: jdbc:mysql://localhost:3306/health_app
+    url: jdbc:mysql://heroku_aebacbd4c8589ef
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: root
+    username: b7041c9c694e96
+    password: 98c9f69b
 server:
   ssl:
     key-alias: spring-https
