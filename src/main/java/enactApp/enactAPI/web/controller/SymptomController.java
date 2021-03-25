@@ -1,5 +1,6 @@
 package enactApp.enactAPI.web.controller;
 
+import enactApp.enactAPI.data.model.FitnessActivity;
 import enactApp.enactAPI.data.model.Symptom;
 import enactApp.enactAPI.data.repository.SymptomRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +27,17 @@ public class SymptomController {
         Collections.sort(symptomList);
         return symptomList;
     }
+    @GetMapping(value = "/api/symptom/all/user")
+    public List<Symptom> getAllSymptomByUserId(@RequestParam String userId) {
+        List<Symptom> symptomListList = symptomRepository.findAllByUserId(Integer.parseInt(userId));
+        Collections.sort(symptomListList);
+        return symptomListList;
+    }
 
     @PostMapping(path = "/api/symptom/add/")
     public boolean saveSymptom(@RequestBody Symptom symptom){
         Symptom newSymptom = new Symptom();
+        newSymptom.setUserId(symptom.getUserId());
         newSymptom.setAbdominalPain(symptom.isAbdominalPain());
         newSymptom.setAppetiteLoss(symptom.isAppetiteLoss());
         newSymptom.setBloating(symptom.isBloating());

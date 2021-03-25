@@ -1,10 +1,10 @@
-CREATE TABLE IF NOT EXISTS `topic`
+CREATE TABLE IF NOT EXISTS `article`
 (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(64) NOT NULL,
+    `article_name` VARCHAR(64),
+    `data` BLOB,
     `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `idtopic_UNIQUE` (`id` ASC) VISIBLE,
-    UNIQUE INDEX `topic_name_UNIQUE` (`name` ASC) VISIBLE)
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
     ENGINE = InnoDB;

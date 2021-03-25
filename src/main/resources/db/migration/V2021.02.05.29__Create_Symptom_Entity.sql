@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS `symptom`
 (
     `id` INT NOT NULL AUTO_INCREMENT,
+    `user_id` INT NOT NULL,
     `abdominal_pain` TINYINT NOT NULL,
     `bloating` TINYINT NOT NULL,
     `nausea` TINYINT NOT NULL,

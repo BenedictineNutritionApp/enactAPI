@@ -28,9 +28,17 @@ public class MetricController {
         return metricList;
     }
 
+    @GetMapping(value = "/api/metric/all/user")
+    public List<Metric> getAllMetricByUserId(@RequestParam String userId) {
+        List<Metric> metricList = metricRepository.findAllByUserId(Integer.parseInt(userId));
+        Collections.sort(metricList);
+        return metricList;
+    }
+
     @PostMapping(path = "/api/metric/add/")
     public boolean saveMetric(@RequestBody Metric metric){
         Metric newMetric = new Metric();
+        newMetric.setUserId(metric.getUserId());
         newMetric.setWeight(metric.getWeight());
         newMetric.setDateTime(metric.getDateTime());
         newMetric.setUpdated(new Date());

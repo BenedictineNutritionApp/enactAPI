@@ -15,6 +15,10 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "metric")
 public class Metric extends AbstractEntity implements Comparable<Metric>{
+
+    @Column(name = "user_id")
+    private Long userId;
+
     @Column(name = "weight")
     private int weight;
 

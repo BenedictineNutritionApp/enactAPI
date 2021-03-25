@@ -27,19 +27,18 @@ public class FitnessActivityController {
         List<FitnessActivity> fitnessActivityList = fitnessActivityRepository.findAll();
         Collections.sort(fitnessActivityList);
         return fitnessActivityList;
-//        return fitnessActivityRepository.findAll();
     }
-
-//    @PostMapping(value = "api/fitnessActivity/add/{type}/{intensity}/{minutes}")
-//    public String addActivity(@PathVariable String type, @PathVariable String intensity, @PathVariable String minutes){
-//        FitnessActivity fitnessActivity = new FitnessActivity(type, intensity, minutes);
-//        fitnessActivityRepository.save(fitnessActivity);
-//        return "added";
-//    }
+    @GetMapping(value = "/api/fitnessActivity/all/user")
+    public List<FitnessActivity> getAllFitnessActivityByUserId(@RequestParam String userId) {
+        List<FitnessActivity> fitnessActivityList = fitnessActivityRepository.findAllByUserId(Integer.parseInt(userId));
+        Collections.sort(fitnessActivityList);
+        return fitnessActivityList;
+    }
 
     @PostMapping(path = "/api/fitnessActivity/add/")
     public boolean saveFitnessActivity(@RequestBody FitnessActivity fitnessActivity) {
         FitnessActivity newFitnessActivity = new FitnessActivity();
+        newFitnessActivity.setUserId(fitnessActivity.getUserId());
         newFitnessActivity.setIntensity(fitnessActivity.getIntensity());
         newFitnessActivity.setMinutes(fitnessActivity.getMinutes());
         newFitnessActivity.setType(fitnessActivity.getType());
