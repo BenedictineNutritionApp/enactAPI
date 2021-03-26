@@ -1,5 +1,4 @@
 package enactApp.enactAPI.web.controller;
-
 import enactApp.enactAPI.data.model.*;
 import enactApp.enactAPI.data.repository.*;
 import enactApp.enactAPI.data.translator.FoodTranslator;
@@ -21,8 +20,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/metric")
 public class MetricController {
-
-
     @Autowired
     private MetricRepository metricRepository;
 
@@ -34,8 +31,17 @@ public class MetricController {
     }
 
     @PostMapping(path = "/add/")
+    @GetMapping(value = "/api/metric/all/user")
+    public List<Metric> getAllMetricByUserId(@RequestParam String userId) {
+        List<Metric> metricList = metricRepository.findAllByUserId(Integer.parseInt(userId));
+        Collections.sort(metricList);
+        return metricList;
+    }
+
+    @PostMapping(path = "/api/metric/add/")
     public boolean saveMetric(@RequestBody Metric metric){
         Metric newMetric = new Metric();
+        newMetric.setUserId(metric.getUserId());
         newMetric.setWeight(metric.getWeight());
         newMetric.setDateTime(metric.getDateTime());
         newMetric.setUpdated(new Date());
@@ -43,6 +49,4 @@ public class MetricController {
         metricRepository.save(newMetric);
         return true;
     }
-
-
 }

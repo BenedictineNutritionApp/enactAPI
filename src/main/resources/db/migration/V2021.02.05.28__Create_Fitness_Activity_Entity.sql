@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS `fitness_activity`
 (
     `id` INT NOT NULL AUTO_INCREMENT,
+    `user_id` INT NOT NULL,
     `type` VARCHAR(64) NOT NULL,
     `minutes` VARCHAR(64) NOT NULL,
     `intensity` VARCHAR(1) NOT NULL,

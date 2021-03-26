@@ -10,6 +10,8 @@ public interface FitnessActivityRepository extends JpaRepository<FitnessActivity
 
     List<FitnessActivity> findAll();
 
+    List<FitnessActivity> findAllByUserId(long userId);
+
 //Option<FitnessActivity> findFitnessActivitiesByType
 
 }

@@ -4,6 +4,10 @@ import enactApp.enactAPI.data.model.*;
 import enactApp.enactAPI.data.repository.*;
 import enactApp.enactAPI.data.translator.FoodTranslator;
 import enactApp.enactAPI.web.models.FoodView;
+import enactApp.enactAPI.data.model.FitnessActivity;
+import enactApp.enactAPI.data.model.Symptom;
+import enactApp.enactAPI.data.repository.SymptomRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import enactApp.enactAPI.data.model.ActivityOption;
 import enactApp.enactAPI.data.repository.ActivityOptionRepository;
@@ -33,10 +37,17 @@ public class SymptomController {
         Collections.sort(symptomList);
         return symptomList;
     }
+    @GetMapping(value = "/api/symptom/all/user")
+    public List<Symptom> getAllSymptomByUserId(@RequestParam String userId) {
+        List<Symptom> symptomListList = symptomRepository.findAllByUserId(Integer.parseInt(userId));
+        Collections.sort(symptomListList);
+        return symptomListList;
+    }
 
     @PostMapping(path = "/add/")
     public boolean saveSymptom(@RequestBody Symptom symptom){
         Symptom newSymptom = new Symptom();
+        newSymptom.setUserId(symptom.getUserId());
         newSymptom.setAbdominalPain(symptom.isAbdominalPain());
         newSymptom.setAppetiteLoss(symptom.isAppetiteLoss());
         newSymptom.setBloating(symptom.isBloating());

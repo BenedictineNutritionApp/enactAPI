@@ -24,6 +24,9 @@ public class FitnessActivity extends AbstractEntity implements Comparable<Fitnes
     @Column(name = "type")
     private String type;
 
+    @Column(name = "user_id")
+    private Long userId;
+
     @Column(name = "minutes")
     private String minutes;
 

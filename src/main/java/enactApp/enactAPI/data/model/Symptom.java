@@ -21,6 +21,9 @@ import java.time.LocalDateTime;
 @Table(name = "symptom")
 public class Symptom extends AbstractEntity implements Comparable<Symptom> {
 
+    @Column(name = "user_id")
+    private Long userId;
+
     @Column(name = "abdominal_pain")
     private boolean abdominalPain;
 
