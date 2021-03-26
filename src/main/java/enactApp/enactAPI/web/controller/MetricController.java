@@ -31,7 +31,7 @@ public class MetricController {
     }
 
     @PostMapping(path = "/add/")
-    @GetMapping(value = "/api/metric/all/user")
+    @GetMapping(value = "/all/user")
     public List<Metric> getAllMetricByUserId(@RequestParam String userId) {
         List<Metric> metricList = metricRepository.findAllByUserId(Integer.parseInt(userId));
         Collections.sort(metricList);

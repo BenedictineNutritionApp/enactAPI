@@ -37,7 +37,7 @@ public class SymptomController {
         Collections.sort(symptomList);
         return symptomList;
     }
-    @GetMapping(value = "/api/symptom/all/user")
+    @GetMapping(value = "/all/user")
     public List<Symptom> getAllSymptomByUserId(@RequestParam String userId) {
         List<Symptom> symptomListList = symptomRepository.findAllByUserId(Integer.parseInt(userId));
         Collections.sort(symptomListList);

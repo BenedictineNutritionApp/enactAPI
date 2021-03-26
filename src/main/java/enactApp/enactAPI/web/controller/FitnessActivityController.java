@@ -31,7 +31,7 @@ public class FitnessActivityController {
         Collections.sort(fitnessActivityList);
         return fitnessActivityList;
     }
-    @GetMapping(value = "/api/fitnessActivity/all/user")
+    @GetMapping(value = "/all/user")
     public List<FitnessActivity> getAllFitnessActivityByUserId(@RequestParam String userId) {
         List<FitnessActivity> fitnessActivityList = fitnessActivityRepository.findAllByUserId(Integer.parseInt(userId));
         Collections.sort(fitnessActivityList);
