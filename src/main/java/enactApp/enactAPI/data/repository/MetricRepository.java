@@ -4,6 +4,7 @@ import enactApp.enactAPI.data.model.FitnessActivity;
 import enactApp.enactAPI.data.model.Metric;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MetricRepository  extends JpaRepository<Metric, Long> {
@@ -11,4 +12,5 @@ public interface MetricRepository  extends JpaRepository<Metric, Long> {
 
     List<Metric> findAllByUserId(long userId);
 
+    List<Metric> findMetricByDateTimeAfterAndUserId(LocalDateTime date, long userId);
 }
