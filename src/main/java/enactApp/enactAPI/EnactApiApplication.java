@@ -1,13 +1,7 @@
 package enactApp.enactAPI;
 
-import enactApp.enactAPI.data.model.CommonPortionSizeDescription;
-import enactApp.enactAPI.data.model.CommonPortionSizeUnit;
-import enactApp.enactAPI.data.model.Food;
-import enactApp.enactAPI.data.model.NccFoodGroupCategory;
-import enactApp.enactAPI.data.repository.CommonPortionSizeDescriptionRepository;
-import enactApp.enactAPI.data.repository.CommonPortionSizeUnitRepository;
-import enactApp.enactAPI.data.repository.FoodRepository;
-import enactApp.enactAPI.data.repository.NccFoodGroupCategoryRepository;
+import enactApp.enactAPI.data.model.*;
+import enactApp.enactAPI.data.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,12 +20,14 @@ public class EnactApiApplication {
     final NccFoodGroupCategoryRepository nccFoodGroupCategoryRepository;
     final CommonPortionSizeDescriptionRepository commonPortionSizeDescriptionRepository;
     final CommonPortionSizeUnitRepository commonPortionSizeUnitRepository;
+    final WeeklyGoalsRepository weeklyGoalsRepository;
 
-    public EnactApiApplication(FoodRepository foodRepository, NccFoodGroupCategoryRepository nccFoodGroupCategoryRepository, CommonPortionSizeDescriptionRepository commonPortionSizeDescriptionRepository, CommonPortionSizeUnitRepository commonPortionSizeUnitRepository) {
+    public EnactApiApplication(FoodRepository foodRepository, NccFoodGroupCategoryRepository nccFoodGroupCategoryRepository, CommonPortionSizeDescriptionRepository commonPortionSizeDescriptionRepository, CommonPortionSizeUnitRepository commonPortionSizeUnitRepository, WeeklyGoalsRepository weeklyGoalsRepository) {
         this.foodRepository = foodRepository;
         this.nccFoodGroupCategoryRepository = nccFoodGroupCategoryRepository;
         this.commonPortionSizeDescriptionRepository = commonPortionSizeDescriptionRepository;
         this.commonPortionSizeUnitRepository = commonPortionSizeUnitRepository;
+        this.weeklyGoalsRepository = weeklyGoalsRepository;
     }
 
     public static void main(String[] args) {
@@ -56,6 +52,7 @@ public class EnactApiApplication {
 //            }
 //            System.out.println("APP RUNNING");
 //            input.close();
+            insertData2();
         };
     }
 
@@ -443,4 +440,42 @@ public class EnactApiApplication {
         System.out.println("DATA INSERTION COMPLETE");
     }
 
+
+    public void insertData2() {
+        Scanner fileReader = null;
+        try {
+            fileReader = new Scanner(new File("src/main/resources/db.data_files/Weekly Goals.csv"));
+        } catch (FileNotFoundException e) {
+            System.out.println("FILE NOT FOUND. CHECK PATH/NAME");
+            e.printStackTrace();
+        }
+        // Skip the header information
+        fileReader.nextLine();
+        // Parse each line of the csv
+        long i = 0;
+        while (fileReader.hasNextLine()) {
+            String line = fileReader.nextLine();
+            String[] goalInfo = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+
+            String type = goalInfo[0];
+            String goalDescription = goalInfo[1];
+            String helpInfo = goalInfo[2];
+
+            i = i+1;
+
+            // Check if the category is already in the database
+            // If it isn't, it is added to the database
+
+            WeeklyGoals weeklyGoals = WeeklyGoals.builder()
+                    .id(i)
+                    .type(type)
+                    .goalDescription(goalDescription)
+                    .help_info(helpInfo)
+                    .build();
+            weeklyGoalsRepository.save(weeklyGoals);
+        }
+
+        System.out.println("DATA INSERTION 2 COMPLETE");
+
+    }
 }

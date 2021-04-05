@@ -30,7 +30,7 @@ public class WeeklyGoalsController {
     }
 
     @PostMapping(path = "/api/weekly_goals/add/")
-    public boolean saveFitnessActivity(@RequestBody WeeklyGoals weeklyGoals) {
+    public boolean saveWeeklyGoals(@RequestBody WeeklyGoals weeklyGoals) {
         WeeklyGoals newWeeklyGoals = new WeeklyGoals();
         newWeeklyGoals.setType(weeklyGoals.getType());
         newWeeklyGoals.setGoalDescription(weeklyGoals.getGoalDescription());
