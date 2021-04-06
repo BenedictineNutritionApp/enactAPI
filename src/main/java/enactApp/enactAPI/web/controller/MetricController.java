@@ -29,12 +29,11 @@ public class MetricController {
     @Autowired
     private MetricRepository metricRepository;
 
-    @GetMapping(value = "/all")
     public MetricController(MetricRepository metricRepository) {
         this.metricRepository = metricRepository;
     }
 
-    @GetMapping(value = "/api/metric/all")
+    @GetMapping(value = "/all")
     public List<Metric> getAllMetric() {
         List<Metric> metricList = metricRepository.findAll();
         Collections.sort(metricList);

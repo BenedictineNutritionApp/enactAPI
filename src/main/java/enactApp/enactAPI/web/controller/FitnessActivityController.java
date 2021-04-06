@@ -37,16 +37,14 @@ public class FitnessActivityController {
     private FitnessActivityRepository fitnessActivityRepository;
 
 
-
     @GetMapping(value = "/all")
     public List<FitnessActivity> getAllFitnessActivity() {
         List<FitnessActivity> fitnessActivityList = fitnessActivityRepository.findAll();
         Collections.sort(fitnessActivityList);
         return fitnessActivityList;
     }
-    @GetMapping(value = "/all/user")
 
-    @GetMapping(value = "/api/fitnessActivity/all/user")
+    @GetMapping(value = "/all/user")
     public List<FitnessActivity> getAllFitnessActivityByUserId(@RequestParam String userId) {
         List<FitnessActivity> fitnessActivityList = fitnessActivityRepository.findAllByUserId(Integer.parseInt(userId));
         Collections.sort(fitnessActivityList);
@@ -69,10 +67,8 @@ public class FitnessActivityController {
         return true;
 
     }
-    @PutMapping(path = "/update")
-    public boolean updateFitnessActivity(@RequestBody FitnessActivity fitnessActivity){
 
-    @PutMapping(path = "/api/fitnessActivity/update")
+    @PutMapping(path = "/update")
     public boolean updateFitnessActivity(@RequestBody FitnessActivity fitnessActivity) {
         FitnessActivity oldFitnessActivity = fitnessActivityRepository.getOne(fitnessActivity.getId());
         fitnessActivity.setUpdated(new Date());
@@ -87,7 +83,7 @@ public class FitnessActivityController {
         LocalDateTime startDate = LocalDateTime.now().minus(Duration.ofDays(Long.parseLong(numberOfDays)));
         List<FitnessActivity> fitnessActivityList = fitnessActivityRepository.findFitnessActivitiesByDateTimeAfterAndAndIntensityIsGreaterThanAndUserId(startDate, intensity, Integer.parseInt(userId));
         int totalWeeklyMinutes = 0;
-        for(FitnessActivity fa : fitnessActivityList){
+        for (FitnessActivity fa : fitnessActivityList) {
             totalWeeklyMinutes = totalWeeklyMinutes + Integer.parseInt(fa.getMinutes());
         }
         return totalWeeklyMinutes;
