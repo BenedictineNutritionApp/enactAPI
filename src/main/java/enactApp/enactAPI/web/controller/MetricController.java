@@ -1,4 +1,5 @@
 package enactApp.enactAPI.web.controller;
+
 import enactApp.enactAPI.data.model.*;
 import enactApp.enactAPI.data.repository.*;
 import enactApp.enactAPI.data.translator.FoodTranslator;
@@ -15,6 +16,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -24,6 +30,11 @@ public class MetricController {
     private MetricRepository metricRepository;
 
     @GetMapping(value = "/all")
+    public MetricController(MetricRepository metricRepository) {
+        this.metricRepository = metricRepository;
+    }
+
+    @GetMapping(value = "/api/metric/all")
     public List<Metric> getAllMetric() {
         List<Metric> metricList = metricRepository.findAll();
         Collections.sort(metricList);
@@ -39,7 +50,7 @@ public class MetricController {
     }
 
     @PostMapping(path = "/api/metric/add/")
-    public boolean saveMetric(@RequestBody Metric metric){
+    public boolean saveMetric(@RequestBody Metric metric) {
         Metric newMetric = new Metric();
         newMetric.setUserId(metric.getUserId());
         newMetric.setWeight(metric.getWeight());
@@ -48,5 +59,13 @@ public class MetricController {
         newMetric.setCreated(new Date());
         metricRepository.save(newMetric);
         return true;
+    }
+
+    @GetMapping(path = "/api/metric/user/range")
+    public List<Metric> getRangeMetricByUserId(@RequestParam String userId, @RequestParam String numberOfDays) {
+        LocalDateTime startDate = LocalDateTime.now().minus(Duration.ofDays(Long.parseLong(numberOfDays)));
+        List<Metric> metricList = metricRepository.findAllByUserId(Integer.parseInt(userId));
+        Collections.sort(metricList);
+        return metricList;
     }
 }
