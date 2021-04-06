@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS `metric`
 (
     `id` INT NOT NULL AUTO_INCREMENT,
+    `user_id` INT NOT NULL,
     `weight` VARCHAR(4),
     `date_time` DATETIME NOT NULL,
     `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

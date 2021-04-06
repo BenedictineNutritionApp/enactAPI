@@ -8,8 +8,8 @@ import enactApp.enactAPI.data.translator.UserTranslator;
 import enactApp.enactAPI.web.models.FoodLogEntryView;
 import enactApp.enactAPI.web.models.FoodView;
 import enactApp.enactAPI.web.models.UserView;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -22,37 +22,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-
-/**
- * This is the userController class
- */
-@Slf4j
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
-    private final UserRepository userRepository;
-    private final FoodRepository foodRepository;
-    private final ActivityLevelRepository activityLevelRepository;
-    private final FrequentGiIssueRepository frequentGiIssueRepository;
-    private final UserHasFrequentGiIssuesRepository userHasFrequentGiIssueRepository;
-    private final FoodLogEntryRepository foodLogEntryRepository;
-    private final CancerTreatmentRepository cancerTreatmentRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private FoodRepository foodRepository;
+    @Autowired
+    private ActivityLevelRepository activityLevelRepository;
+    @Autowired
+    private FrequentGiIssueRepository frequentGiIssueRepository;
+    @Autowired
+    private UserHasFrequentGiIssuesRepository userHasFrequentGiIssueRepository;
+    @Autowired
+    private  FoodLogEntryRepository foodLogEntryRepository;
+    @Autowired
+    private CancerTreatmentRepository cancerTreatmentRepository;
 
-
-    public UserController(UserRepository userRepository, FoodRepository foodRepository, ActivityLevelRepository activityLevelRepository, FrequentGiIssueRepository frequentGiIssueRepository, UserHasFrequentGiIssuesRepository userHasFrequentGiIssueRepository, FoodLogEntryRepository foodLogEntryRepository, CancerTreatmentRepository cancerTreatmentRepository) {
-        this.userRepository = userRepository;
-        this.foodRepository = foodRepository;
-        this.activityLevelRepository = activityLevelRepository;
-        this.frequentGiIssueRepository = frequentGiIssueRepository;
-        this.userHasFrequentGiIssueRepository = userHasFrequentGiIssueRepository;
-        this.foodLogEntryRepository = foodLogEntryRepository;
-        this.cancerTreatmentRepository = cancerTreatmentRepository;
-    }
-
-
-    @CrossOrigin(origins = "http://localhost:4200/", allowedHeaders = "*")
-    @GetMapping(value = "api/users/checkIfEmailExists/{email}")
+    @GetMapping(value = "/checkIfEmailExists/{email}")
     public boolean checkIfEmailExists(@PathVariable String email) {
         // If the user does not exist currently
         Optional<User> optionalUser = userRepository.findUserByEmail(email);
@@ -65,8 +55,7 @@ public class UserController {
      * @param user The user
      * @return The string containing the error type or successful registration pop up
      */
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @PostMapping(value = "api/users/register")
+    @PostMapping(value = "/register")
     public String createUser(@Valid @RequestBody User user) {
         //Checks if the entered email is already in use
         Optional<User> optionalUser = userRepository.findUserByEmail(user.getEmail());
@@ -94,8 +83,7 @@ public class UserController {
     }
 
 
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @PostMapping(value = "api/users/profile/ratios")
+    @PostMapping(value = "/profile/ratios")
     public String setUserNutrientRatios(@Valid @RequestBody NutrientRatioFormModel nutrientRatioFormModel) {
         Optional<User> optionalUser = userRepository.findUserById(nutrientRatioFormModel.getUserId());
         if (!optionalUser.isPresent()) {
@@ -113,7 +101,7 @@ public class UserController {
         return null;
     }
 
-//    @PostMapping(path = "api/users/register/")
+//    @PostMapping(path = "/register/")
 //    public boolean createUser(@RequestBody User user) {
 //        System.out.println(user.getEmail());
 //        System.out.println(user.getPassword());
@@ -122,8 +110,7 @@ public class UserController {
 //    }
 
 
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @GetMapping(value = "api/users/login/{email}/{password}")
+    @GetMapping(value = "/login/{email}/{password}")
     public String login(@PathVariable String email, @PathVariable String password) {
         // If the user does not exist currently
         Optional<User> optionalUser = userRepository.findUserByEmail(email);
@@ -141,8 +128,7 @@ public class UserController {
         return user.getId().toString();
     }
 
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @GetMapping(value = "api/users/formstatus/{id}")
+    @GetMapping(value = "/formstatus/{id}")
     public String getFormCompletionStatus(@PathVariable String id) {
         System.out.println("here");
         Optional<User> optionalUser = userRepository.findUserById(Long.parseLong(id));
@@ -160,16 +146,14 @@ public class UserController {
     }
 
     @Transactional
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @DeleteMapping(value = "api/users/{id}/delete/issues")
+    @DeleteMapping(value = "/{id}/delete/issues")
     public void deleteUserGiIssues(@PathVariable Long id) {
         userHasFrequentGiIssueRepository.deleteAllByUserId(id);
 
     }
 
 
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @PostMapping(value = "api/users/form/save/")
+    @PostMapping(value = "/form/save/")
     public String saveFormInfo(@Valid @RequestBody FormModel formModel) throws ParseException {
         Optional<User> optionalUser = userRepository.findUserById(formModel.getUserId());
         if (optionalUser.isEmpty()) {
@@ -267,8 +251,7 @@ public class UserController {
         return "form saved";
     }
 
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @PostMapping(value = "api/users/form/update/")
+    @PostMapping(value = "/form/update/")
     public String updateFormInfo(@Valid @RequestBody FormModel formModel) throws ParseException {
         Optional<User> optionalUser = userRepository.findUserById(formModel.getUserId());
         if (optionalUser.isEmpty()) {
@@ -306,8 +289,7 @@ public class UserController {
     }
 
 
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @GetMapping(value = "api/users/{userId}/get")
+    @GetMapping(value = "/{userId}/get")
     public UserView getUserInfo(@PathVariable String userId) {
         Optional<User> optionalUser = userRepository.findUserById(Long.parseLong(userId));
         if (optionalUser.isPresent()) {
@@ -317,8 +299,7 @@ public class UserController {
     }
 
 
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @GetMapping(value = "api/users/{userId}/foodlog/{date}")
+    @GetMapping(value = "/{userId}/foodlog/{date}")
     public List<FoodLogEntryView> getDailyFoodLog(@PathVariable String userId, @PathVariable String date) throws ParseException {
         Date parsedDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
         List<FoodLogEntry> foodLogEntryList = foodLogEntryRepository.findFoodLogEntryByUserIdAndDateOrderByEntryTime(Long.parseLong(userId), parsedDate);
@@ -326,8 +307,7 @@ public class UserController {
 
     }
 
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @GetMapping(value = "api/users/{userId}/foodlog/frequent")
+    @GetMapping(value = "/{userId}/foodlog/frequent")
     public List<FoodView> getFrequentFoods(@PathVariable String userId) {
         ArrayList<FoodView> frequentFoods = new ArrayList<>();
         List<FoodLogEntry> foodLogEntryList = foodLogEntryRepository.findFrequentFoods(Long.parseLong(userId));
@@ -341,8 +321,7 @@ public class UserController {
 
     }
 
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @PostMapping(value = "api/users/foodlog/save/")
+    @PostMapping(value = "/foodlog/save/")
     public String saveNewFoodLog(@Valid @RequestBody FoodLogEntryModel foodLogEntryModel) throws ParseException {
         FoodLogEntry newFoodLogEntry = new FoodLogEntry();
         newFoodLogEntry.setEntryTime(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(foodLogEntryModel.getEntryTime()));
@@ -356,8 +335,7 @@ public class UserController {
         return "new food log entry saved";
     }
 
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @PostMapping(value = "api/users/foodlog/update")
+    @PostMapping(value = "/foodlog/update")
     public String updateFoodLog(@Valid @RequestBody FoodLogEntryModel foodLogEntryModel) throws ParseException {
         Optional<FoodLogEntry> optionalFoodLogEntry = foodLogEntryRepository.findFoodLogEntryById(foodLogEntryModel.getId());
         if (optionalFoodLogEntry.isEmpty()) {
@@ -371,8 +349,7 @@ public class UserController {
         return "food log entry updated";
     }
 
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @PostMapping(value = "api/users/{userId}/update/weight/")
+    @PostMapping(value = "/{userId}/update/weight/")
     public String updateWeight(@Valid @PathVariable Long userId, @RequestBody Metric metric) {
         Optional<User> optionalUser = userRepository.findUserById(userId);
         if (optionalUser.isEmpty()) {
@@ -391,11 +368,8 @@ public class UserController {
     }
 
     @Transactional
-    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
-    @DeleteMapping(value = "api/users/foodlog/delete/{id}")
+    @DeleteMapping(value = "/foodlog/delete/{id}")
     public void deleteFoodLogEntry(@PathVariable Long id) {
         foodLogEntryRepository.deleteById(id);
     }
-
-
 }

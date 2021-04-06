@@ -2,26 +2,29 @@ package enactApp.enactAPI.web.controller;
 
 import enactApp.enactAPI.data.model.*;
 import enactApp.enactAPI.data.repository.*;
-import enactApp.enactAPI.data.translator.FoodTranslator;
-import enactApp.enactAPI.web.models.FoodView;
-import enactApp.enactAPI.web.payload.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import enactApp.enactAPI.data.model.ActivityOption;
+import enactApp.enactAPI.data.repository.ActivityOptionRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/food")
-public class FoodController {
+@RequestMapping("/api/administrators")
+public class AdministratorController {
+
 
     @Autowired
     private FoodRepository foodRepository;
@@ -34,39 +37,36 @@ public class FoodController {
 
 
     /**
-     * @return A list of all food objects in the database
+     * This method parses a csv file and saves food information to the database.
      */
-    @GetMapping(value = "/all")
-    public List<FoodView> getAllFood() {
-        return FoodTranslator.entitiesToViews(foodRepository.findAll());
-    }
-
-    /**
-     * @return A list of all food objects in the database that match
-     */
-    @GetMapping(value = "/search/{query}")
-    public List<FoodView> searchFood(@PathVariable String query) {
-        return FoodTranslator.entitiesToViews(foodRepository.findFoodByDescriptionContaining(query));
-    }
-
-
-    @PostMapping("/upload")
-    public ResponseEntity<?> upload(@Valid @RequestParam("file") MultipartFile file) throws IOException {
-        String message = "";
+    @PostMapping(value = "/upload/")
+    public String insertData(@RequestParam("file") MultipartFile file) throws IOException {
+        // Check if file is csv
+        if (file.getContentType() != "txt/csv") {
+            return "error";
+        }
+//        Scanner fileReader = null;
         BufferedReader br = null;
         try {
             InputStream is = file.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
+//            fileReader = new Scanner(file);
         } catch (FileNotFoundException e) {
+            System.out.println("FILE NOT FOUND. CHECK PATH/NAME");
             e.printStackTrace();
+            return "error";
+
         }
         try {
             // Skip the header information
             br.readLine();
+//            fileReader.nextLine();
             String line = "";
             // Parse each line of the csv
             while ((line = br.readLine()) != null) {
+//                String line = fileReader.nextLine();
                 String[] foodInfo = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+
                 int baseId = Integer.parseInt(foodInfo[0]);
                 String keylist = foodInfo[1];
                 String description = foodInfo[3];
@@ -418,61 +418,13 @@ public class FoodController {
                             .updated(new Date())
                             .build();
                     foodRepository.save(newFood);
-                } else {
-                    Food food = optionalFood.get();
-                    food.setBaseId(baseId);
-                    food.setKeylist(keylist);
-                    food.setDescription(description);
-                    food.setFoodType(foodType);
-                    food.setNccFoodGroupCategoryId(nccFoodGroupCategoryId);
-                    food.setKcal(kcal);
-                    food.setProteinInGrams(proteinInGrams);
-                    food.setFatInGrams(fatInGrams);
-                    food.setCarbohydratesInGrams(carbohydratesInGrams);
-                    food.setFiberInGrams(fiberInGrams);
-                    food.setSolubleFiberInGrams(solubleFiberInGrams);
-                    food.setInsolubleFiberInGrams(insolubleFiberInGrams);
-                    food.setCalciumInMilligrams(calciumInMilligrams);
-                    food.setSodiumInMilligrams(sodiumInMilligrams);
-                    food.setSaturatedFattyAcidsInGrams(saturatedFattyAcidsInGrams);
-                    food.setPolyunsaturatedFattyAcidsInGrams(polyunsaturatedFattyAcidsInGrams);
-                    food.setMonounsaturatedFattyAcidsInGrams(monounsaturatedFattyAcidsInGrams);
-                    food.setCholesterolInMilligrams(cholesterolInMilligrams);
-                    food.setSugarInGrams(sugarInGrams);
-                    food.setAddedSugarsInGrams(addedSugarsInGrams);
-                    food.setAlcoholInGrams(alcoholInGrams);
-                    food.setCaffeineInMilligrams(caffeineInMilligrams);
-                    food.setIronInMilligrams(ironInMilligrams);
-                    food.setPotassiumInMilligrams(potassiumInMilligrams);
-                    food.setPhosphorusInMilligrams(phosphorusInMilligrams);
-                    food.setThiaminInMilligrams(thiaminInMilligrams);
-                    food.setRiboflavinInMilligrams(riboflavinInMilligrams);
-                    food.setNiacinInMilligrams(niacinInMilligrams);
-                    food.setPantothenicAcidInMilligrams(pantothenicAcidInMilligrams);
-                    food.setVitaminB6InMilligrams(vitaminB6InMilligrams);
-                    food.setVitaminB12InMicrograms(vitaminB12InMicrograms);
-                    food.setVitaminCInMilligrams(vitaminCInMilligrams);
-                    food.setFolateInMicrograms(folateInMicrograms);
-                    food.setVitaminAInInternationalUnits(vitaminAInInternationalUnits);
-                    food.setBetaCaroteneInMicrograms(betaCaroteneInMicrograms);
-                    food.setLycopeneInMicrograms(lycopeneInMicrograms);
-                    food.setVitaminDInMicrograms(vitaminDInMicrograms);
-                    food.setVitaminEInInternationalUnits(vitaminEInInternationalUnits);
-                    food.setCommonPortionSizeAmount(commonPortionSizeAmount);
-                    food.setCommonPortionSizeGramWeight(commonPortionSizeGramWeight);
-                    food.setCommonPortionSizeDescriptionId(commonPortionSizeDescriptionId);
-                    food.setCommonPortionSizeUnitId(commonPortionSizeUnitId);
-                    food.setUpdated(new Date());
-                    foodRepository.save(food);
                 }
-
-
             }
-
+            System.out.println("DATA INSERTION COMPLETE");
+            return "file successfully uploaded";
         } catch (Exception e) {
+            return "error";
         }
-        return ResponseEntity.ok(new MessageResponse("Food uploaded successfully!"));
     }
-
 
 }
