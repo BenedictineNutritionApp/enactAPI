@@ -68,9 +68,19 @@ public class SymptomController {
     @PutMapping(path = "/update")
     public boolean updateSymptom(@RequestBody Symptom symptom){
         Symptom oldSymptom = symptomRepository.getOne(symptom.getId());
-        symptom.setUpdated(new Date());
-        symptom.setCreated(oldSymptom.getCreated());
-        symptomRepository.save(symptom);
+        oldSymptom.setAbdominalPain(symptom.isAbdominalPain());
+        oldSymptom.setAppetiteLoss(symptom.isAppetiteLoss());
+        oldSymptom.setBloating(symptom.isBloating());
+        oldSymptom.setConstipation(symptom.isConstipation());
+        oldSymptom.setDiarrhea(symptom.isDiarrhea());
+        oldSymptom.setNausea(symptom.isNausea());
+        oldSymptom.setStomaProblems(symptom.isStomaProblems());
+        oldSymptom.setVomiting(symptom.isVomiting());
+        oldSymptom.setOther(symptom.getOther());
+        oldSymptom.setId(symptom.getId());
+        oldSymptom.setDateTime(symptom.getDateTime());
+        oldSymptom.setUpdated(new Date());
+        symptomRepository.save(oldSymptom);
         return true;
     }
 

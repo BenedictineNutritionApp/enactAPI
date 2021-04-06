@@ -78,7 +78,7 @@ public class FitnessActivityController {
     }
 
 
-    @GetMapping(value = "/api/fitnessActivity/week/user/")
+    @GetMapping(value = "/week/user/")
     public int getWeekFitnessActivity(@RequestParam String numberOfDays, @RequestParam String intensity, @RequestParam String userId) {
         LocalDateTime startDate = LocalDateTime.now().minus(Duration.ofDays(Long.parseLong(numberOfDays)));
         List<FitnessActivity> fitnessActivityList = fitnessActivityRepository.findFitnessActivitiesByDateTimeAfterAndAndIntensityIsGreaterThanAndUserId(startDate, intensity, Integer.parseInt(userId));

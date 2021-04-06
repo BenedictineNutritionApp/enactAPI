@@ -40,7 +40,6 @@ public class MetricController {
         return metricList;
     }
 
-    @PostMapping(path = "/add/")
     @GetMapping(value = "/all/user")
     public List<Metric> getAllMetricByUserId(@RequestParam String userId) {
         List<Metric> metricList = metricRepository.findAllByUserId(Integer.parseInt(userId));
@@ -48,9 +47,12 @@ public class MetricController {
         return metricList;
     }
 
-    @PostMapping(path = "/api/metric/add/")
+    @PostMapping(path = "/add/")
     public boolean saveMetric(@RequestBody Metric metric) {
         Metric newMetric = new Metric();
+        System.out.println("+++++++++++++++++++++++++++");
+        System.out.println(metric.getUserId());
+        System.out.println("+++++++++++++++++++++++++++");
         newMetric.setUserId(metric.getUserId());
         newMetric.setWeight(metric.getWeight());
         newMetric.setDateTime(metric.getDateTime());
@@ -60,7 +62,7 @@ public class MetricController {
         return true;
     }
 
-    @GetMapping(path = "/api/metric/user/range")
+    @GetMapping(path = "/user/range")
     public List<Metric> getRangeMetricByUserId(@RequestParam String userId, @RequestParam String numberOfDays) {
         LocalDateTime startDate = LocalDateTime.now().minus(Duration.ofDays(Long.parseLong(numberOfDays)));
         List<Metric> metricList = metricRepository.findAllByUserId(Integer.parseInt(userId));
