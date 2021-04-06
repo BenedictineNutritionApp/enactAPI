@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Slf4j
@@ -43,14 +44,8 @@ public class WeeklyGoalsSavedController {
 
     }
 
-    @DeleteMapping("/api/weekly_goals_saved/delete/{id}")
-    public String deleteById(@PathVariable("id") Long id) {
-        return "Delete by id called";
-    }
-
-    @DeleteMapping(value = "/api/weekly_goals_saved/delete/")
-    public String deleteByGoalDescription(@RequestParam(value = "goal_description") String goal) {
-        return "Delete by goal description called";
-    }
-
+    @Transactional
+    @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+    @DeleteMapping(value = "/api/weekly_goals_saved/delete/{id}")
+    public void deleteWeeklyGoalsSavedByID(@PathVariable("id") Long id) { weeklyGoalsSavedRepository.deleteById(id); }
 }
