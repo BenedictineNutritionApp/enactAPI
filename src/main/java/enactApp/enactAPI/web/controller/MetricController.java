@@ -14,10 +14,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.*;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -50,9 +48,7 @@ public class MetricController {
     @PostMapping(path = "/add/")
     public boolean saveMetric(@RequestBody Metric metric) {
         Metric newMetric = new Metric();
-        System.out.println("+++++++++++++++++++++++++++");
         System.out.println(metric.getUserId());
-        System.out.println("+++++++++++++++++++++++++++");
         newMetric.setUserId(metric.getUserId());
         newMetric.setWeight(metric.getWeight());
         newMetric.setDateTime(metric.getDateTime());
@@ -67,6 +63,16 @@ public class MetricController {
         LocalDateTime startDate = LocalDateTime.now().minus(Duration.ofDays(Long.parseLong(numberOfDays)));
         List<Metric> metricList = metricRepository.findAllByUserId(Integer.parseInt(userId));
         Collections.sort(metricList);
+        return metricList;
+    }
+
+    @GetMapping(value = "/day/user")
+    public List<Metric> getDayMetrics(@RequestParam String userId) {
+        LocalTime midnight = LocalTime.MIDNIGHT;
+        LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
+        LocalDateTime todayMidnight = LocalDateTime.of(today, midnight);
+        LocalDateTime yesterdayMidnight = todayMidnight.minusDays(1);
+        List<Metric> metricList = metricRepository.findMetricByDateTimeAfterAndUserId(todayMidnight, Integer.parseInt(userId));
         return metricList;
     }
 }
