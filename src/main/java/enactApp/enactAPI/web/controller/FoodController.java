@@ -8,6 +8,7 @@ import enactApp.enactAPI.web.payload.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,6 +51,7 @@ public class FoodController {
     }
 
 
+    @PreAuthorize("hasRole('BASE') or hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping("/upload")
     public ResponseEntity<?> upload(@Valid @RequestParam("file") MultipartFile file) throws IOException {
         String message = "";

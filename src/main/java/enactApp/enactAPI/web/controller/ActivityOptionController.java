@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import enactApp.enactAPI.data.model.ActivityOption;
 import enactApp.enactAPI.data.repository.ActivityOptionRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -27,6 +28,7 @@ public class ActivityOptionController {
         return activityOptionRepository.findAll();
     }
 
+    @PreAuthorize("hasRole('BASE') or hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping(value = "/create")
     public ResponseEntity<?> createActivity(@Valid @RequestBody ActivityOption activityOption) {
         Optional<ActivityOption> optionalActivityOption = activityOptionRepository.findActivityOptionByType(activityOption.getType());
@@ -48,6 +50,7 @@ public class ActivityOptionController {
         }
     }
 
+    @PreAuthorize("hasRole('BASE') or hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping(value = "/edit")
     public ResponseEntity<?> editActivity(@Valid @RequestBody ActivityOption activityOption) {
         Optional<ActivityOption> optionalActivityOption = activityOptionRepository.findActivityOptionById(activityOption.getId());

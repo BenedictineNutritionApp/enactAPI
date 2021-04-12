@@ -47,6 +47,7 @@ public class WeeklyGoalsController {
 
     }
 
+    @PreAuthorize("hasRole('BASE') or hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping(value = "/create")
     public ResponseEntity<?> createGoal(@Valid @RequestBody WeeklyGoals weeklyGoal) {
         Optional<WeeklyGoals> optionalWeeklyGoal = weeklyGoalsRepository.findWeeklyGoalsByGoalDescription(weeklyGoal.getGoalDescription());
@@ -67,6 +68,7 @@ public class WeeklyGoalsController {
         }
     }
 
+    @PreAuthorize("hasRole('BASE') or hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping(value = "/edit")
     public ResponseEntity<?> editGoal(@Valid @RequestBody WeeklyGoals weeklyGoal) {
         Optional<WeeklyGoals> optionalWeeklyGoal = weeklyGoalsRepository.findWeeklyGoalsById(weeklyGoal.getId());
