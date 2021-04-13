@@ -21,7 +21,6 @@ import java.util.Date;
 public class User extends AbstractEntity {
 //public class User extends AbstractEntity implements UserDetails, CredentialsContainer {
 
-
     @Column(name = "email")
     private String email;
 
@@ -54,6 +53,15 @@ public class User extends AbstractEntity {
 
     @Column(name = "weight")
     private Long weight;
+
+    @Column(name = "fat_percent")
+    private Long fatPercent;
+
+    @Column(name = "protein_percent")
+    private Long proteinPercent;
+
+    @Column(name = "carbohydrate_percent")
+    private Long carbohydratePercent;
 
     @Column(name = "activity_level_id")
     private Long activityLevelId;

@@ -1,37 +1,40 @@
 package enactApp.enactAPI.web.controller;
 
-import enactApp.enactAPI.data.model.WeeklyGoals;
-import enactApp.enactAPI.data.repository.WeeklyGoalsRepository;
-import lombok.extern.slf4j.Slf4j;
+import enactApp.enactAPI.data.model.*;
+import enactApp.enactAPI.data.repository.*;
+import enactApp.enactAPI.data.translator.FoodTranslator;
+import enactApp.enactAPI.web.models.FoodView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
+import enactApp.enactAPI.data.model.ActivityOption;
+import enactApp.enactAPI.data.repository.ActivityOptionRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.*;
 
-@Slf4j
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/api/weekly_goals")
 public class WeeklyGoalsController {
 
+
     @Autowired
-    private final WeeklyGoalsRepository weeklyGoalsRepository;
-
-    public WeeklyGoalsController(WeeklyGoalsRepository weeklyGoalsRepository) {
-        this.weeklyGoalsRepository = weeklyGoalsRepository;
-    }
+    private WeeklyGoalsRepository weeklyGoalsRepository;
 
 
-    @GetMapping(value = "/api/weekly_goals/all")
+    @GetMapping(value = "/all")
     public List<WeeklyGoals> getWeeklyGoals() {
         List<WeeklyGoals> weeklyGoalsList = weeklyGoalsRepository.findAll();
         return weeklyGoalsList;
     }
 
-    @PostMapping(path = "/api/weekly_goals/add/")
-    public boolean saveWeeklyGoals(@RequestBody WeeklyGoals weeklyGoals) {
+    @PostMapping(path = "/add/")
+    public boolean saveFitnessActivity(@RequestBody WeeklyGoals weeklyGoals) {
         WeeklyGoals newWeeklyGoals = new WeeklyGoals();
         newWeeklyGoals.setType(weeklyGoals.getType());
         newWeeklyGoals.setGoalDescription(weeklyGoals.getGoalDescription());
@@ -41,4 +44,6 @@ public class WeeklyGoalsController {
         return true;
 
     }
+
+
 }

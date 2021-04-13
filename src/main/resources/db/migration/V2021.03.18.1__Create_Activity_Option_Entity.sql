@@ -1,11 +1,10 @@
-CREATE TABLE IF NOT EXISTS `fitness_activity`
+CREATE TABLE IF NOT EXISTS `activity_option`
 (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `user_id` INT NOT NULL,
     `type` VARCHAR(64) NOT NULL,
-    `minutes` VARCHAR(64) NOT NULL,
-    `intensity` VARCHAR(1) NOT NULL,
-    `date_time` DATETIME NOT NULL,
+    `intensity` INT NOT NULL,
+    `coefficient` DECIMAL(10,4),
+    `is_visible` TINYINT NULL DEFAULT true,
     `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),

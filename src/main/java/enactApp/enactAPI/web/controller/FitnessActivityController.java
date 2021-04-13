@@ -1,49 +1,61 @@
 package enactApp.enactAPI.web.controller;
 
 import enactApp.enactAPI.data.model.FitnessActivity;
-import enactApp.enactAPI.data.model.Food;
-import enactApp.enactAPI.data.model.User;
+import enactApp.enactAPI.data.model.Metric;
 import enactApp.enactAPI.data.repository.FitnessActivityRepository;
-import enactApp.enactAPI.data.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Local;
+import enactApp.enactAPI.data.model.*;
+import enactApp.enactAPI.data.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import enactApp.enactAPI.data.model.ActivityOption;
+import enactApp.enactAPI.data.repository.ActivityOptionRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
-@Slf4j
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/api/fitnessActivity")
 public class FitnessActivityController {
 
     @Autowired
-    private final FitnessActivityRepository fitnessActivityRepository;
-
-    public FitnessActivityController(FitnessActivityRepository fitnessActivityRepository) {
-        this.fitnessActivityRepository = fitnessActivityRepository;
-    }
+    private FitnessActivityRepository fitnessActivityRepository;
 
 
-    @GetMapping(value = "/api/fitnessActivity/all")
+    @GetMapping(value = "/all")
     public List<FitnessActivity> getAllFitnessActivity() {
         List<FitnessActivity> fitnessActivityList = fitnessActivityRepository.findAll();
         Collections.sort(fitnessActivityList);
         return fitnessActivityList;
-//        return fitnessActivityRepository.findAll();
     }
 
-//    @PostMapping(value = "api/fitnessActivity/add/{type}/{intensity}/{minutes}")
-//    public String addActivity(@PathVariable String type, @PathVariable String intensity, @PathVariable String minutes){
-//        FitnessActivity fitnessActivity = new FitnessActivity(type, intensity, minutes);
-//        fitnessActivityRepository.save(fitnessActivity);
-//        return "added";
-//    }
+    @GetMapping(value = "/all/user")
+    public List<FitnessActivity> getAllFitnessActivityByUserId(@RequestParam String userId) {
+        List<FitnessActivity> fitnessActivityList = fitnessActivityRepository.findAllByUserId(Integer.parseInt(userId));
+        Collections.sort(fitnessActivityList);
+        return fitnessActivityList;
+    }
 
-    @PostMapping(path = "/api/fitnessActivity/add/")
+    @PostMapping(path = "/add/")
     public boolean saveFitnessActivity(@RequestBody FitnessActivity fitnessActivity) {
+        System.out.println(fitnessActivity.getDateTime());
         FitnessActivity newFitnessActivity = new FitnessActivity();
+        newFitnessActivity.setUserId(fitnessActivity.getUserId());
         newFitnessActivity.setIntensity(fitnessActivity.getIntensity());
         newFitnessActivity.setMinutes(fitnessActivity.getMinutes());
         newFitnessActivity.setType(fitnessActivity.getType());
@@ -54,5 +66,26 @@ public class FitnessActivityController {
         System.out.println(newFitnessActivity.getType());
         return true;
 
+    }
+
+    @PutMapping(path = "/update")
+    public boolean updateFitnessActivity(@RequestBody FitnessActivity fitnessActivity) {
+        FitnessActivity oldFitnessActivity = fitnessActivityRepository.getOne(fitnessActivity.getId());
+        fitnessActivity.setUpdated(new Date());
+        fitnessActivity.setCreated(oldFitnessActivity.getCreated());
+        fitnessActivityRepository.save(fitnessActivity);
+        return true;
+    }
+
+
+    @GetMapping(value = "/week/user/")
+    public int getWeekFitnessActivity(@RequestParam String numberOfDays, @RequestParam String intensity, @RequestParam String userId) {
+        LocalDateTime startDate = LocalDateTime.now().minus(Duration.ofDays(Long.parseLong(numberOfDays)));
+        List<FitnessActivity> fitnessActivityList = fitnessActivityRepository.findFitnessActivitiesByDateTimeAfterAndAndIntensityIsGreaterThanAndUserId(startDate, intensity, Integer.parseInt(userId));
+        int totalWeeklyMinutes = 0;
+        for (FitnessActivity fa : fitnessActivityList) {
+            totalWeeklyMinutes = totalWeeklyMinutes + Integer.parseInt(fa.getMinutes());
+        }
+        return totalWeeklyMinutes;
     }
 }

@@ -7,8 +7,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Scanner;
@@ -20,13 +23,15 @@ public class EnactApiApplication {
     final NccFoodGroupCategoryRepository nccFoodGroupCategoryRepository;
     final CommonPortionSizeDescriptionRepository commonPortionSizeDescriptionRepository;
     final CommonPortionSizeUnitRepository commonPortionSizeUnitRepository;
+    final ArticleRepository articleRepository;
     final WeeklyGoalsRepository weeklyGoalsRepository;
 
-    public EnactApiApplication(FoodRepository foodRepository, NccFoodGroupCategoryRepository nccFoodGroupCategoryRepository, CommonPortionSizeDescriptionRepository commonPortionSizeDescriptionRepository, CommonPortionSizeUnitRepository commonPortionSizeUnitRepository, WeeklyGoalsRepository weeklyGoalsRepository) {
+    public EnactApiApplication(FoodRepository foodRepository, NccFoodGroupCategoryRepository nccFoodGroupCategoryRepository, CommonPortionSizeDescriptionRepository commonPortionSizeDescriptionRepository, CommonPortionSizeUnitRepository commonPortionSizeUnitRepository, WeeklyGoalsRepository weeklyGoalsRepository, ArticleRepository articleRepository) {
         this.foodRepository = foodRepository;
         this.nccFoodGroupCategoryRepository = nccFoodGroupCategoryRepository;
         this.commonPortionSizeDescriptionRepository = commonPortionSizeDescriptionRepository;
         this.commonPortionSizeUnitRepository = commonPortionSizeUnitRepository;
+        this.articleRepository = articleRepository;
         this.weeklyGoalsRepository = weeklyGoalsRepository;
     }
 
@@ -437,6 +442,32 @@ public class EnactApiApplication {
                 foodRepository.save(newFood);
             }
         }
+
+        Path pdfPath = Paths.get("src/main/resources/db.data_files/sample.pdf");
+        byte[] pdf = new byte[0];
+        try {
+            pdf = Files.readAllBytes(pdfPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//        File pdfFile = new File("src/main/resources/db.data_files/sample.pdf");
+
+//        byte[] pdfData = new byte[(int) pdfFile.length()];
+        Article article = new Article("Test Article", pdf);
+        article.setCreated(new Date());
+        article.setUpdated(new Date());
+        articleRepository.save(article);
+//        try {
+//            DataInputStream dis = new DataInputStream(new FileInputStream(pdfFile));
+//            dis.readFully(pdfData);
+//            dis.close();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
         System.out.println("DATA INSERTION COMPLETE");
     }
 

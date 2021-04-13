@@ -19,7 +19,10 @@ import java.time.LocalDateTime;
 @Entity
 
 @Table(name = "symptom")
-public class Symptom extends AbstractEntity {
+public class Symptom extends AbstractEntity implements Comparable<Symptom> {
+
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(name = "abdominal_pain")
     private boolean abdominalPain;
@@ -51,4 +54,8 @@ public class Symptom extends AbstractEntity {
     @Column(name = "date_time")
     private LocalDateTime dateTime;
 
+    @Override
+    public int compareTo(Symptom o) {
+        return o.getDateTime().compareTo(getDateTime());
+    }
 }
