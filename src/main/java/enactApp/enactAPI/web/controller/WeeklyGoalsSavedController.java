@@ -37,7 +37,7 @@ public class WeeklyGoalsSavedController {
         newWeeklyGoalsSaved.setType(weeklyGoalsSaved.getType());
         newWeeklyGoalsSaved.setGoalDescription(weeklyGoalsSaved.getGoalDescription());
         newWeeklyGoalsSaved.setHelp_info(weeklyGoalsSaved.getHelp_info());
-        newWeeklyGoalsSaved.setUserId(i);
+        newWeeklyGoalsSaved.setUserId(weeklyGoalsSaved.getUserId());
         weeklyGoalsSavedRepository.save(newWeeklyGoalsSaved);
         System.out.println(newWeeklyGoalsSaved.getType());
         return true;
