@@ -4,6 +4,7 @@ import enactApp.enactAPI.data.model.WeeklyGoals;
 import enactApp.enactAPI.data.repository.WeeklyGoalsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;

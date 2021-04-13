@@ -9,7 +9,6 @@ import java.util.Optional;
 public interface FitnessActivityRepository extends JpaRepository<FitnessActivity, Long> {
 
     List<FitnessActivity> findAll();
-
 //Option<FitnessActivity> findFitnessActivitiesByType
 
 }

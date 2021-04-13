@@ -4,6 +4,7 @@ import enactApp.enactAPI.data.model.WeeklyGoalsSaved;
 import enactApp.enactAPI.data.repository.WeeklyGoalsSavedRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class WeeklyGoalsSavedController {
         newWeeklyGoalsSaved.setType(weeklyGoalsSaved.getType());
         newWeeklyGoalsSaved.setGoalDescription(weeklyGoalsSaved.getGoalDescription());
         newWeeklyGoalsSaved.setHelp_info(weeklyGoalsSaved.getHelp_info());
-        newWeeklyGoalsSaved.setUserId(i);
+        newWeeklyGoalsSaved.setUserId(weeklyGoalsSaved.getUserId());
         weeklyGoalsSavedRepository.save(newWeeklyGoalsSaved);
         System.out.println(newWeeklyGoalsSaved.getType());
         return true;
