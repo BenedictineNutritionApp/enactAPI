@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -29,10 +29,14 @@ public class WeeklyGoalsSavedController {
         return weeklyGoalsSavedList;
     }
 
+    @GetMapping(value = "/api/weekly_goals_saved/all/{id}")
+    public List<WeeklyGoalsSaved> getWeeklyGoalsSavedByID(@PathVariable("id") Long id) {
+        List<WeeklyGoalsSaved> weeklyGoalsSavedList = weeklyGoalsSavedRepository.findWeeklyGoalsSavedsByUserId(id);
+        return weeklyGoalsSavedList;
+    }
+
     @PostMapping(path = "/api/weekly_goals_saved/add/")
     public boolean saveWeeklyGoalsSaved(@RequestBody WeeklyGoalsSaved weeklyGoalsSaved) {
-        long i = 0;
-        i = 1+i;
         WeeklyGoalsSaved newWeeklyGoalsSaved = new WeeklyGoalsSaved();
         newWeeklyGoalsSaved.setId(weeklyGoalsSaved.getId());
         newWeeklyGoalsSaved.setType(weeklyGoalsSaved.getType());
