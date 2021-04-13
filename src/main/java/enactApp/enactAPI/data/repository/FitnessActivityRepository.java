@@ -15,6 +15,8 @@ public interface FitnessActivityRepository extends JpaRepository<FitnessActivity
 
     List<FitnessActivity> findFitnessActivitiesByDateTimeAfterAndAndIntensityIsGreaterThanAndUserId(LocalDateTime date, String intensity, long userId);
 
+    List<FitnessActivity> findFitnessActivitiesByDateTimeAfterAndUserId(LocalDateTime date, long userId);
+
 //Option<FitnessActivity> findFitnessActivitiesByType
 
 }

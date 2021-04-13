@@ -13,4 +13,5 @@ public interface MetricRepository  extends JpaRepository<Metric, Long> {
     List<Metric> findAllByUserId(long userId);
 
     List<Metric> findMetricByDateTimeAfterAndUserId(LocalDateTime date, long userId);
+
 }
