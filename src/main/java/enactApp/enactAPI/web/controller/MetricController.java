@@ -72,7 +72,7 @@ public class MetricController {
         LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
         LocalDateTime todayMidnight = LocalDateTime.of(today, midnight);
         LocalDateTime yesterdayMidnight = todayMidnight.minusDays(1);
-        List<Metric> metricList = metricRepository.findMetricByDateTimeAfterAndUserId(todayMidnight, Integer.parseInt(userId));
+        List<Metric> metricList = metricRepository.findMetricByDateTimeAfterAndUserId(yesterdayMidnight, Integer.parseInt(userId));
         return metricList;
     }
 }
