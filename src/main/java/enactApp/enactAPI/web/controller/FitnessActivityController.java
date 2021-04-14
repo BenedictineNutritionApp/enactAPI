@@ -18,11 +18,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.*;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
@@ -87,5 +84,15 @@ public class FitnessActivityController {
             totalWeeklyMinutes = totalWeeklyMinutes + Integer.parseInt(fa.getMinutes());
         }
         return totalWeeklyMinutes;
+    }
+
+    @GetMapping(value = "/day/user")
+    public List<FitnessActivity> getDayActivities(@RequestParam String userId) {
+        LocalTime midnight = LocalTime.MIDNIGHT;
+        LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
+        LocalDateTime todayMidnight = LocalDateTime.of(today, midnight);
+        LocalDateTime yesterdayMidnight = todayMidnight.minusDays(1);
+        List<FitnessActivity> fitnessActivityList = fitnessActivityRepository.findFitnessActivitiesByDateTimeAfterAndUserId(yesterdayMidnight, Integer.parseInt(userId));
+        return fitnessActivityList;
     }
 }

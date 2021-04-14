@@ -38,7 +38,7 @@ public class UserController {
     @Autowired
     private UserHasFrequentGiIssuesRepository userHasFrequentGiIssueRepository;
     @Autowired
-    private  FoodLogEntryRepository foodLogEntryRepository;
+    private FoodLogEntryRepository foodLogEntryRepository;
     @Autowired
     private CancerTreatmentRepository cancerTreatmentRepository;
 
@@ -298,6 +298,20 @@ public class UserController {
         return null;
     }
 
+    @PreAuthorize("hasRole('SUPER') or hasRole('MASTER')")
+    @GetMapping(value = "/all")
+    public List<User> getUserInfo() {
+        ArrayList<User> usersFromDB = (ArrayList<User>) userRepository.findAll();
+        ArrayList<User> usersToSend = new ArrayList<>();
+        for (User userFromDB : usersFromDB) {
+            User userToSend = new User();
+            userToSend.setId(userFromDB.getId());
+            usersToSend.add(userToSend);
+        }
+
+        return usersToSend;
+    }
+
 
     @GetMapping(value = "/{userId}/foodlog/{date}")
     public List<FoodLogEntryView> getDailyFoodLog(@PathVariable String userId, @PathVariable String date) throws ParseException {
@@ -358,7 +372,7 @@ public class UserController {
         User user = optionalUser.get();
         Date date = Date.from(metric.getDateTime().atZone(ZoneId.systemDefault()).toInstant());
 
-        if(date.after(user.getUpdated())) {
+        if (date.after(user.getUpdated())) {
             user.setWeight((long) metric.getWeight());
             user.setUpdated(new Date());
             userRepository.save(user);

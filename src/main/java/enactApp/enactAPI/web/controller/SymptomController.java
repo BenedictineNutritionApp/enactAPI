@@ -18,6 +18,9 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -44,7 +47,7 @@ public class SymptomController {
         return symptomListList;
     }
 
-    @PostMapping(path = "/add/")
+    @PostMapping(path = "/add")
     public boolean saveSymptom(@RequestBody Symptom symptom){
         Symptom newSymptom = new Symptom();
         newSymptom.setUserId(symptom.getUserId());
@@ -83,6 +86,14 @@ public class SymptomController {
         symptomRepository.save(oldSymptom);
         return true;
     }
-
+    @GetMapping(value = "/day/user")
+    public List<Symptom> getDayActivities(@RequestParam String userId) {
+        LocalTime midnight = LocalTime.MIDNIGHT;
+        LocalDate today = LocalDate.now(ZoneId.of("America/Montreal"));
+        LocalDateTime todayMidnight = LocalDateTime.of(today, midnight);
+        LocalDateTime yesterdayMidnight = todayMidnight.minusDays(1);
+        List<Symptom> symptomList = symptomRepository.findSymptomByDateTimeAfterAndUserId(todayMidnight, Integer.parseInt(userId));
+        return symptomList;
+    }
 
 }
