@@ -298,7 +298,7 @@ public class UserController {
         return null;
     }
 
-    @PreAuthorize("hasRole('SUPER') or hasRole('MASTER')")
+    @PreAuthorize("hasRole('BASE') or hasRole('SUPER') or hasRole('MASTER')")
     @GetMapping(value = "/all")
     public List<User> getUserInfo() {
         ArrayList<User> usersFromDB = (ArrayList<User>) userRepository.findAll();
