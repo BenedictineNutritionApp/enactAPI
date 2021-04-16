@@ -308,7 +308,6 @@ public class UserController {
             userToSend.setId(userFromDB.getId());
             usersToSend.add(userToSend);
         }
-
         return usersToSend;
     }
 

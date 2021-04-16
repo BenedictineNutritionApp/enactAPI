@@ -51,7 +51,7 @@ public class FoodController {
     }
 
 
-    @PreAuthorize("hasRole('BASE') or hasRole('SUPER') or hasRole('MASTER')")
+    @PreAuthorize("hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping("/upload")
     public ResponseEntity<?> upload(@Valid @RequestParam("file") MultipartFile file) throws IOException {
         String message = "";

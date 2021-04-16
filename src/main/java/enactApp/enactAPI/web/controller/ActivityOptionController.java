@@ -28,7 +28,7 @@ public class ActivityOptionController {
         return activityOptionRepository.findAll();
     }
 
-    @PreAuthorize("hasRole('BASE') or hasRole('SUPER') or hasRole('MASTER')")
+    @PreAuthorize("hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping(value = "/create")
     public ResponseEntity<?> createActivity(@Valid @RequestBody ActivityOption activityOption) {
         Optional<ActivityOption> optionalActivityOption = activityOptionRepository.findActivityOptionByType(activityOption.getType());
@@ -50,7 +50,7 @@ public class ActivityOptionController {
         }
     }
 
-    @PreAuthorize("hasRole('BASE') or hasRole('SUPER') or hasRole('MASTER')")
+    @PreAuthorize("hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping(value = "/edit")
     public ResponseEntity<?> editActivity(@Valid @RequestBody ActivityOption activityOption) {
         Optional<ActivityOption> optionalActivityOption = activityOptionRepository.findActivityOptionById(activityOption.getId());
