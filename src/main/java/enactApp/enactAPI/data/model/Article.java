@@ -21,10 +21,19 @@ public class Article extends AbstractEntity  {
     @Column(name = "article_name")
     private String articleName;
 
-//    @Column(name = "article_author")
-//    private String articleAuthor;
+    @Column(name = "article_author")
+    private String articleAuthor;
+
+    @Column(name = "article_subject")
+    private String articleSubject;
+
+    @Column(name = "article_type")
+    private String articleType;
 
     @Column(name = "data")
     private byte[] data;
+
+    @Column(name = "is_visible")
+    private boolean isVisible;
 
 }
