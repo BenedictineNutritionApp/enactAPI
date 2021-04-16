@@ -8,6 +8,7 @@ import java.util.List;
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     List<Article> findAll();
+    void deleteArticleById(Long id);
 
     List<Article> findAllByArticleAuthorLike(String searchString);
 
