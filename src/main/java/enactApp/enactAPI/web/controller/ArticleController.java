@@ -43,6 +43,16 @@ public class ArticleController {
 
     @PreAuthorize("hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping("/upload")
+    public ResponseEntity<?> upload(@Valid @RequestParam("articleName") String title, @RequestParam("articleAuthor")
+            String author, @RequestParam("articleSubject") String subject, @RequestParam("articleType") String type, @RequestParam("isVisible") String visibility, @RequestParam("file") MultipartFile file) throws IOException {
+
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//        Article article = new Article();
+        Article article = new Article(fileName, "author", "subject", "type", file.getBytes(), false);
+        article.setCreated(new Date());
+        article.setUpdated(new Date());
+        articleRepository.save(article);
+        return ResponseEntity.ok(new MessageResponse("Article uploaded successfully!"));
     public ResponseEntity<?> createArticle(@Valid
                                          @RequestParam("articleName") String articleName,
                                          @RequestParam("articleAuthor") String articleAuthor,
@@ -69,8 +79,11 @@ public class ArticleController {
         }
     }
 
+
     @PreAuthorize("hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping("/edit")
+    public ResponseEntity<?> upload(@Valid @RequestParam("id") Long id, @Valid @RequestParam("articleName") String title, @RequestParam("articleAuthor")
+            String author, @RequestParam("articleSubject") String subject, @RequestParam("articleType") String type, @RequestParam("isVisible") String visibility, @RequestParam("file") MultipartFile file) throws IOException {
     public ResponseEntity<?> editArticle(@Valid @RequestParam("id") Long id,
                                          @RequestParam("articleName") String articleName,
                                          @RequestParam("articleAuthor") String articleAuthor,
@@ -84,16 +97,18 @@ public class ArticleController {
             System.out.println(file.getOriginalFilename());
             System.out.println(file.getContentType());
             System.out.println(id);
-            System.out.println(articleName);
-            System.out.println(articleAuthor);
-            System.out.println(articleSubject);
-            System.out.println(articleType);
-            System.out.println(isVisible);
-            //find existing article
-            //change necessary fields
-            //save article
+            System.out.println(title);
+            System.out.println(author);
+            System.out.println(subject);
+            System.out.println(file.getName());
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            Article article = new Article(fileName, "author", "subject", "type", file.getBytes(), false);
+            article.setCreated(new Date());
+            article.setUpdated(new Date());
+            articleRepository.save(article);
             return ResponseEntity.ok(new MessageResponse("Article uploaded successfully!"));
         } else {
+            System.out.println("BUMMERMAN");
 
             return ResponseEntity.ok(new MessageResponse("Invalid file type"));
         }
@@ -107,4 +122,5 @@ public class ArticleController {
 
     }
 
+    //TODO
 }

@@ -454,10 +454,10 @@ public class EnactApiApplication {
 //        File pdfFile = new File("src/main/resources/db.data_files/sample.pdf");
 
 //        byte[] pdfData = new byte[(int) pdfFile.length()];
-        Article article = new Article("Test Article's and Why You Need Them.", "Author McAuthorson", "Testing PDFs","Self Help", pdf, true);
-        article.setCreated(new Date());
-        article.setUpdated(new Date());
-        articleRepository.save(article);
+//        Article article = new Article("Test Article's and Why You Need Them.", "Author McAuthorson", "Testing PDFs","Self Help", pdf);
+//        article.setCreated(new Date());
+//        article.setUpdated(new Date());
+//        articleRepository.save(article);
 //        try {
 //            DataInputStream dis = new DataInputStream(new FileInputStream(pdfFile));
 //            dis.readFully(pdfData);
