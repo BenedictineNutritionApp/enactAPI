@@ -49,6 +49,18 @@ public class UserController {
         return optionalUser.isPresent();
     }
 
+    @PostMapping(value = "/resetPassword")
+    public String resetUserPassword(@RequestParam String email){
+        System.out.println("Processing password reset logic");
+
+
+
+
+
+        return "Sent recovery email";
+    }
+
+
     /**
      * This method creates the user by setting the user details and saving them to the database, returning error messages or success message when applicable.
      *

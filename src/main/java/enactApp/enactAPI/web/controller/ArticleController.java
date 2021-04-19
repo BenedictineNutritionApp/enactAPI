@@ -33,15 +33,11 @@ public class ArticleController {
 
     @PreAuthorize("hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping("/upload")
-    public ResponseEntity<?> upload(@Valid @RequestParam("title") String title, @RequestParam("author")
-            String author, @RequestParam("topic") String topic, @RequestParam("file") MultipartFile file) throws IOException {
-        System.out.println("MADE IT TO ARTICLE UPLOAD");
-        System.out.println(file.getOriginalFilename());
-        System.out.println(title);
-        System.out.println(author);
-        System.out.println(topic);
-        System.out.println(file.getName());
+    public ResponseEntity<?> upload(@Valid @RequestParam("articleName") String title, @RequestParam("articleAuthor")
+            String author, @RequestParam("articleSubject") String subject, @RequestParam("articleType") String type, @RequestParam("isVisible") String visibility, @RequestParam("file") MultipartFile file) throws IOException {
+
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//        Article article = new Article();
         Article article = new Article(fileName, "author", "subject", "type", file.getBytes(), false);
         article.setCreated(new Date());
         article.setUpdated(new Date());
@@ -49,10 +45,11 @@ public class ArticleController {
         return ResponseEntity.ok(new MessageResponse("Article uploaded successfully!"));
     }
 
+
     @PreAuthorize("hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping("/edit")
-    public ResponseEntity<?> upload(@Valid @RequestParam("id") Long id, @RequestParam("title") String title, @RequestParam("author")
-            String author, @RequestParam("topic") String topic, @RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<?> upload(@Valid @RequestParam("id") Long id, @Valid @RequestParam("articleName") String title, @RequestParam("articleAuthor")
+            String author, @RequestParam("articleSubject") String subject, @RequestParam("articleType") String type, @RequestParam("isVisible") String visibility, @RequestParam("file") MultipartFile file) throws IOException {
         if (file.getContentType().equals("application/pdf")) {
             System.out.println("MADE IT TO ARTICLE EDIT");
             System.out.println(file.getOriginalFilename());
@@ -60,7 +57,7 @@ public class ArticleController {
             System.out.println(id);
             System.out.println(title);
             System.out.println(author);
-            System.out.println(topic);
+            System.out.println(subject);
             System.out.println(file.getName());
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
             Article article = new Article(fileName, "author", "subject", "type", file.getBytes(), false);
@@ -74,6 +71,5 @@ public class ArticleController {
             return ResponseEntity.ok(new MessageResponse("Article uploaded successfully!"));
         }
     }
-//TODO CHANGE VISIBILITY
     //TODO
 }
