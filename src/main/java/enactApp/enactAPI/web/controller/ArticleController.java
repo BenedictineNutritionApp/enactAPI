@@ -43,38 +43,21 @@ public class ArticleController {
 
     @PreAuthorize("hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping("/upload")
-    public ResponseEntity<?> upload(@Valid @RequestParam("articleName") String title, @RequestParam("articleAuthor")
-            String author, @RequestParam("articleSubject") String subject, @RequestParam("articleType") String type, @RequestParam("isVisible") String visibility, @RequestParam("file") MultipartFile file) throws IOException {
-
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-//        Article article = new Article();
-        Article article = new Article(fileName, "author", "subject", "type", file.getBytes(), false);
-        article.setCreated(new Date());
-        article.setUpdated(new Date());
-        articleRepository.save(article);
-        return ResponseEntity.ok(new MessageResponse("Article uploaded successfully!"));
     public ResponseEntity<?> createArticle(@Valid
-                                         @RequestParam("articleName") String articleName,
-                                         @RequestParam("articleAuthor") String articleAuthor,
-                                         @RequestParam("articleSubject") String articleSubject,
-                                         @RequestParam("articleType") String articleType,
-                                         @RequestParam("isVisible") String isVisible,
-                                         @RequestParam("file") MultipartFile file) {
+                                           @RequestParam("articleName") String articleName,
+                                           @RequestParam("articleAuthor") String articleAuthor,
+                                           @RequestParam("articleSubject") String articleSubject,
+                                           @RequestParam("articleType") String articleType,
+                                           @RequestParam("isVisible") String isVisible,
+                                           @RequestParam("file") MultipartFile file) throws IOException {
         if (file.getContentType().equals("application/pdf")) {
-            // this is manually converted because the front end can't send booleans in form data
             boolean visible = isVisible.equalsIgnoreCase("true");
-            System.out.println(file.getOriginalFilename());
-            System.out.println(file.getContentType());
-            System.out.println(articleName);
-            System.out.println(articleAuthor);
-            System.out.println(articleSubject);
-            System.out.println(articleType);
-            System.out.println(isVisible);
-            //create new article
-            //save article to db
+            Article article = new Article(articleName, articleAuthor, articleSubject, articleType, file.getBytes(), visible);
+            article.setCreated(new Date());
+            article.setUpdated(new Date());
+            articleRepository.save(article);
             return ResponseEntity.ok(new MessageResponse("Article uploaded successfully!"));
         } else {
-
             return ResponseEntity.ok(new MessageResponse("Invalid file type"));
         }
     }
@@ -82,31 +65,30 @@ public class ArticleController {
 
     @PreAuthorize("hasRole('SUPER') or hasRole('MASTER')")
     @PostMapping("/edit")
-    public ResponseEntity<?> upload(@Valid @RequestParam("id") Long id, @Valid @RequestParam("articleName") String title, @RequestParam("articleAuthor")
-            String author, @RequestParam("articleSubject") String subject, @RequestParam("articleType") String type, @RequestParam("isVisible") String visibility, @RequestParam("file") MultipartFile file) throws IOException {
     public ResponseEntity<?> editArticle(@Valid @RequestParam("id") Long id,
                                          @RequestParam("articleName") String articleName,
                                          @RequestParam("articleAuthor") String articleAuthor,
                                          @RequestParam("articleSubject") String articleSubject,
                                          @RequestParam("articleType") String articleType,
                                          @RequestParam("isVisible") String isVisible,
-                                         @RequestParam("file") MultipartFile file) {
+                                         @RequestParam("file") MultipartFile file) throws IOException {
         if (file.getContentType().equals("application/pdf")) {
-            // this is manually converted because the front end can't send booleans in form data
-            boolean visible = isVisible.equalsIgnoreCase("true");
-            System.out.println(file.getOriginalFilename());
-            System.out.println(file.getContentType());
-            System.out.println(id);
-            System.out.println(title);
-            System.out.println(author);
-            System.out.println(subject);
-            System.out.println(file.getName());
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            Article article = new Article(fileName, "author", "subject", "type", file.getBytes(), false);
-            article.setCreated(new Date());
-            article.setUpdated(new Date());
-            articleRepository.save(article);
-            return ResponseEntity.ok(new MessageResponse("Article uploaded successfully!"));
+            Optional<Article> optionalArticle = articleRepository.findArticleById(id);
+            if (optionalArticle.isPresent()) {
+                Article article = optionalArticle.get();
+                article.setArticleName(articleName);
+                article.setArticleAuthor(articleAuthor);
+                article.setArticleSubject(articleSubject);
+                article.setArticleType(articleType);
+                article.setVisible(isVisible.equalsIgnoreCase("true"));
+                article.setUpdated(new Date());
+                articleRepository.save(article);
+                return ResponseEntity.ok(new MessageResponse("Article uploaded successfully!"));
+            } else {
+                return ResponseEntity.ok(new MessageResponse("Error"));
+
+            }
+
         } else {
             System.out.println("BUMMERMAN");
 
@@ -117,10 +99,7 @@ public class ArticleController {
     @PreAuthorize("hasRole('SUPER') or hasRole('MASTER')")
     @Transactional
     @DeleteMapping(value = "/delete/{id}")
-    public void deleteUserGiIssues(@PathVariable Long id) {
+    public void deleteArticle(@PathVariable Long id) {
         articleRepository.deleteArticleById(id);
-
     }
-
-    //TODO
 }
