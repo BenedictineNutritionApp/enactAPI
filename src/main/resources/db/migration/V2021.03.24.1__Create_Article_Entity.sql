@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `article`
     `article_author` VARCHAR(128),
     `article_subject` VARCHAR(128),
     `article_type` VARCHAR(128),
-    `data` MEDIUMBLOB,
+    `data` LONGBLOB,
     `is_visible` TINYINT NULL DEFAULT true,
     `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
