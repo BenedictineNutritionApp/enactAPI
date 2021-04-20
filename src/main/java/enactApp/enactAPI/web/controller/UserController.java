@@ -2,6 +2,7 @@ package enactApp.enactAPI.web.controller;
 
 import enactApp.enactAPI.data.model.*;
 import enactApp.enactAPI.data.repository.*;
+import enactApp.enactAPI.data.service.EmailService;
 import enactApp.enactAPI.data.translator.FoodLogEntryTranslator;
 import enactApp.enactAPI.data.translator.FoodTranslator;
 import enactApp.enactAPI.data.translator.UserTranslator;
@@ -10,7 +11,9 @@ import enactApp.enactAPI.web.models.FoodView;
 import enactApp.enactAPI.web.models.UserView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import net.bytebuddy.utility.RandomString;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -41,6 +44,8 @@ public class UserController {
     private FoodLogEntryRepository foodLogEntryRepository;
     @Autowired
     private CancerTreatmentRepository cancerTreatmentRepository;
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping(value = "/checkIfEmailExists/{email}")
     public boolean checkIfEmailExists(@PathVariable String email) {
@@ -50,16 +55,32 @@ public class UserController {
     }
 
     @PostMapping(value = "/resetPassword")
-    public String resetUserPassword(@RequestParam String email){
-        System.out.println("Processing password reset logic");
-
-
-
-
-
+    public String resetUserPassword(@RequestParam String email) {
+        Optional<User> optionalUser = userRepository.findUserByEmail(email);
+        if (optionalUser != null) {
+            User user = optionalUser.get();
+            String token = RandomString.make(45);
+            updateResetPasswordToken(user, token);
+            sendResetPasswordEmail(user.getEmail(), token);
+        }
         return "Sent recovery email";
     }
 
+    private void sendResetPasswordEmail(String email, String token) {
+        emailService.sendResetPasswordEmail(email, token);
+    }
+
+    public void updateResetPasswordToken(User user, String token) {
+            user.setResetPasswordToken(token);
+            userRepository.save(user);
+    }
+
+    @PutMapping(path = "/updatePassword/{token}")
+    public void changePassword(@PathVariable String token) {
+//        user.setPassword(newPassword);
+//        user.setResetPasswordToken(null);
+//        userRepository.save(user);
+    }
 
     /**
      * This method creates the user by setting the user details and saving them to the database, returning error messages or success message when applicable.

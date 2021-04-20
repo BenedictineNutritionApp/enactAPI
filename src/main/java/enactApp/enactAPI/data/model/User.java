@@ -81,6 +81,8 @@ public class User extends AbstractEntity {
     @Column(name = "screener_completed")
     private Boolean screenerCompleted;
 
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
 
 }
 
