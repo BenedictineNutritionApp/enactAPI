@@ -38,11 +38,12 @@ public class WeeklyGoalsSavedController {
     @PostMapping(path = "/api/weekly_goals_saved/add/")
     public boolean saveWeeklyGoalsSaved(@RequestBody WeeklyGoalsSaved weeklyGoalsSaved) {
         WeeklyGoalsSaved newWeeklyGoalsSaved = new WeeklyGoalsSaved();
-        newWeeklyGoalsSaved.setId(weeklyGoalsSaved.getId());
         newWeeklyGoalsSaved.setType(weeklyGoalsSaved.getType());
         newWeeklyGoalsSaved.setGoalDescription(weeklyGoalsSaved.getGoalDescription());
         newWeeklyGoalsSaved.setHelp_info(weeklyGoalsSaved.getHelp_info());
         newWeeklyGoalsSaved.setUserId(weeklyGoalsSaved.getUserId());
+        newWeeklyGoalsSaved.setUpdated(new Date());
+        newWeeklyGoalsSaved.setCreated(new Date());
         weeklyGoalsSavedRepository.save(newWeeklyGoalsSaved);
         System.out.println(newWeeklyGoalsSaved.getType());
         return true;

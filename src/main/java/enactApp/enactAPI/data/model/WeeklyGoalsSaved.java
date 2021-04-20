@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @ToString
 @Entity
 @Table(name = "weekly_goals_saved")
-public class WeeklyGoalsSaved {
+public class WeeklyGoalsSaved extends AbstractEntity {
 
     @Column(name = "type")
     private String type;
@@ -35,16 +35,5 @@ public class WeeklyGoalsSaved {
     @Column(name = "user_id")
     private Long userId;
 
-    @Id
-    private Long id;
-
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
 
 }
